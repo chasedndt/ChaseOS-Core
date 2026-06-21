@@ -1,0 +1,93 @@
+runtime_id: "openclaw"
+platform: "windows"
+lifecycle_mode: "external-service"
+coordination_watch:
+  enabled: true
+  runtime_name: "OpenClaw"
+  interval_seconds: 30
+  claim_next: true
+  stale_after_seconds: 900
+  supervision:
+    enabled: true
+    autostart: true
+    restart_policy: "manual"
+    state_file: "runtime/lifecycle/run/openclaw-coordination-watch.json"
+    log_file: "runtime/lifecycle/run/openclaw-coordination-watch.log"
+    notes: "ChaseOS-managed background launcher/state for the OpenClaw coordination-watch loop."
+  bootstrap:
+    enabled: true
+    registration_kind: "windows-task-scheduler"
+    trigger: "on-logon"
+    task_name: "ChaseOS-OpenClaw-Coordination-Watch"
+    launcher_path: "runtime/lifecycle/bootstrap/openclaw-coordination-watch-start.cmd"
+    registration_artifact: "runtime/lifecycle/bootstrap/openclaw-coordination-watch-registration.json"
+    handoff_script_path: "runtime/lifecycle/bootstrap/openclaw-coordination-watch-handoff.ps1"
+    handoff_artifact_path: "runtime/lifecycle/bootstrap/openclaw-coordination-watch-handoff.json"
+    reboot_verify_script_path: "runtime/lifecycle/bootstrap/openclaw-coordination-watch-reboot-verify.ps1"
+    reboot_verify_artifact_path: "runtime/lifecycle/bootstrap/openclaw-coordination-watch-reboot-verify.json"
+    reboot_verify_result_path: "runtime/lifecycle/run/openclaw-coordination-watch-reboot-verify-result.json"
+    success_record_path: "runtime/lifecycle/run/openclaw-coordination-watch-bootstrap-success.json"
+    event_log_path: "runtime/lifecycle/run/openclaw-coordination-watch-bootstrap-events.jsonl"
+    notes: "ChaseOS-owned host-registration artifact for Windows Task Scheduler startup of the OpenClaw coordination-watch supervisor."
+  notes: "ChaseOS-owned coordination refresh loop for the OpenClaw runtime lane."
+start:
+  kind: "command"
+  command: "openclaw gateway start"
+stop:
+  kind: "command"
+  command: "openclaw gateway stop"
+restart:
+  kind: "command"
+  command: "openclaw gateway restart"
+health:
+  kind: "http"
+  probe_label: "openclaw-loopback-dashboard"
+  candidate_ports:
+    - 18789
+  urls:
+    - "http://127.0.0.1:18789/"
+    - "http://localhost:18789/"
+  success_status: 200
+  timeout_seconds: 3
+  notes: "OpenClaw health prefers the lightweight loopback dashboard probe over heavier status commands."
+startup_surfaces:
+  gateway:
+    surface_id: "gateway"
+    surface_type: "gateway_launcher"
+    ui_label: "OpenClaw Gateway"
+    supported: true
+    toggle_supported: true
+    current_state_source: "host_startup_file"
+    startup_registration_kind: "windows-startup-folder"
+    mutation_status: "studio-local-app-built-approval-artifacts-built-host-executor-pending"
+    path_resolution: "dynamic-user"
+    launcher_path: "{windows_startup_dir}\\OpenClaw Gateway.cmd"
+    target_path: "{windows_userprofile}\\.openclaw\\gateway.cmd"
+    status_command: "chaseos runtime startup-surfaces --runtime openclaw --json"
+    notes: "Portable Windows Startup launcher for the OpenClaw gateway. ChaseOS resolves the Windows user profile and Startup folder at runtime, so installer/GitHub installs are not tied to C:\\Users\\chaseos. The runtime CLI toggle is live through startup-surface-toggle, the Studio CLI wrapper is live through studio runtime-startup-controls, and the localhost visual wrapper is live through studio runtime-startup-controls-app; broad Studio desktop integration remains planned."
+  coordination_watch_supervisor:
+    surface_id: "coordination_watch_supervisor"
+    surface_type: "coordination_watch_supervisor"
+    ui_label: "OpenClaw Coordination Watch"
+    supported: true
+    toggle_supported: true
+    current_state_source: "coordination_watch_supervisor"
+    startup_registration_kind: "host-process"
+    mutation_status: "studio-local-app-built-approval-artifacts-built-host-executor-pending"
+    status_command: "chaseos runtime coordination-watch-supervisor --runtime openclaw --action status --json"
+    notes: "Current-session ChaseOS coordination-watch supervisor status for OpenClaw."
+  coordination_watch_bootstrap:
+    surface_id: "coordination_watch_bootstrap"
+    surface_type: "coordination_watch_bootstrap"
+    ui_label: "OpenClaw Startup Registration"
+    supported: true
+    toggle_supported: true
+    current_state_source: "coordination_watch_bootstrap"
+    startup_registration_kind: "windows-task-scheduler"
+    mutation_status: "studio-local-app-built-approval-artifacts-built-host-executor-pending"
+    status_command: "chaseos runtime coordination-watch-bootstrap --runtime openclaw --action activation-report --json"
+    enable_command: "chaseos runtime coordination-watch-bootstrap --runtime openclaw --action activation-checklist --json"
+    disable_command: "chaseos runtime coordination-watch-bootstrap --runtime openclaw --action activation-checklist --json"
+    notes: "Host startup registration can be controlled through the startup-surface-toggle CLI, the Studio runtime-startup-controls CLI wrapper, and the localhost runtime-startup-controls app; future broad Studio desktop toggles should use the same activation checklist/report evidence chain."
+ownership: "chaseos-managed-runtime-lane"
+notes: "OpenClaw is the active bounded runtime lane. Lifecycle should reuse native OpenClaw gateway controls rather than invent a duplicate process manager."

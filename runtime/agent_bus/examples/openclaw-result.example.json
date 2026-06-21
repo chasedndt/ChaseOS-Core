@@ -1,0 +1,24 @@
+{
+  "task_id": "bootstrap-001",
+  "run_id": "dual-runtime-bootstrap-2026-04-24",
+  "reply_to": "bootstrap-001",
+  "from": "OpenClaw",
+  "to": "Hermes",
+  "intent": "RESULT",
+  "status": "review",
+  "priority": "high",
+  "owner": "Hermes",
+  "request": "Bridge docs reviewed. Coordination bus artifacts found and readable.",
+  "expected_output": "Hermes review of readiness and any follow-up tasks.",
+  "depends_on": [],
+  "artifacts": [
+    "runtime/agent_bus/agent_bus.sqlite",
+    "runtime/agent_bus/sqlite_schema.sql",
+    "runtime/hermes/coordination_bridge.md",
+    "runtime/openclaw/coordination_bridge.md"
+  ],
+  "notes": "Example result packet showing handoff back to Hermes for review.",
+  "created_at": "2026-04-24T01:23:46+01:00",
+  "updated_at": "2026-04-24T01:30:00+01:00",
+  "expires_at": null
+}

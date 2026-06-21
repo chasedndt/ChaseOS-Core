@@ -1,0 +1,32 @@
+runtime_id: "openclaw"
+platform: "deployment-specific"
+lifecycle_mode: "runtime-daemon"
+coordination_watch:
+  enabled: true
+  runtime_name: "OpenClaw"
+  interval_seconds: 30
+  claim_next: true
+  stale_after_seconds: 900
+  supervision:
+    enabled: true
+    autostart: false
+    restart_policy: "manual"
+    state_file: "${CHASEOS_VAULT}/runtime/lifecycle/run/openclaw-coordination-watch.json"
+    log_file: "${CHASEOS_VAULT}/runtime/lifecycle/run/openclaw-coordination-watch.log"
+  bootstrap:
+    enabled: false
+    registration_kind: "windows-task-scheduler"
+    trigger: "on-logon"
+    task_name: "ChaseOS-OpenClaw-Coordination-Watch"
+    launcher_path: "${CHASEOS_VAULT}/runtime/lifecycle/bootstrap/openclaw-coordination-watch-start.cmd"
+start:
+  kind: "command"
+  command: "python -m runtime.cli.main runtime daemon --runtime openclaw --daemon-interval 30 --vault-root ${CHASEOS_VAULT}"
+stop:
+  kind: "operator"
+  command: "stop the local OpenClaw daemon using your process supervisor"
+health:
+  kind: "command"
+  command: "python -m runtime.cli.main runtime status --runtime openclaw --json"
+notes: "Template only. Replace placeholders in private local config, not in public Core."
+

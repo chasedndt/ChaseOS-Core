@@ -1,0 +1,99 @@
+# Hermes runtime Pulse native schedule manifest shape
+# Status: scaffolded / inactive
+
+manifest_id: hermes_runtime_pulse
+schedule_id: hermes_runtime_pulse
+feature: chaseos_pulse
+owner: chaseos
+status: scaffolded
+enabled: false
+activation_state: planned
+
+cadence:
+  type: daily
+  local_time: "18:30"
+  timezone: Europe/London
+  preferred_window: close_day
+  not_before: "17:30"
+  not_after: "20:00"
+
+execution:
+  schedule_owner: chaseos
+  runtime_target: hermes
+  executor_adapter: native_chaseos_scheduler_planned
+  workflow_id: hermes_runtime_pulse_generate
+  allowed_runtime_adapters:
+    - hermes
+    - codex
+    - local
+  external_runtime_owner: false
+  hermes_owner: false
+  openclaw_cron_owner: false
+
+delivery:
+  target: local_agent_pulse_deck_archive
+  output_root: "07_LOGS/Pulse-Decks/agents/hermes/"
+
+missed_run_policy:
+  if_machine_off: catch_up_once
+  if_server_down: queue_pending
+  if_runtime_unavailable: defer_to_review
+  if_approval_timeout: create_review_card
+
+approval_policy:
+  default: no_canonical_writeback
+  requires_approval_for:
+    - editing_project_files
+    - promoting_memory_atoms
+    - invoking_external_connectors
+    - contacting_external_services
+    - expanding_runtime_permissions
+
+deck:
+  audience: agent
+  output_format:
+    - markdown
+    - json
+  writeback_targets:
+    - "07_LOGS/Agent-Activity/"
+  canonical_writeback_enabled: false
+
+source_policy:
+  allowed_local_sources:
+    - "HERMES.md"
+    - "06_AGENTS/Hermes-Adapter-Spec.md"
+    - "06_AGENTS/Hermes-Memory-Boundary.md"
+    - "06_AGENTS/Hermes-Workflow-Boundaries.md"
+    - "runtime/memory/adapters/hermes/"
+    - "runtime/memory/nav/hermes/"
+    - "runtime/memory/repair/hermes.json"
+    - "runtime/memory/scorecards/hermes.json"
+    - "07_LOGS/Agent-Activity/"
+  external_connectors_enabled: false
+  unrestricted_browsing_enabled: false
+
+feedback_policy_ref: "06_AGENTS/Pulse-Feedback-Policy.md"
+card_schema_ref: "06_AGENTS/Pulse-Card-Schema.md"
+architecture_ref: "06_AGENTS/ChaseOS-Pulse-Architecture.md"
+
+audit_requirements:
+  - schedule_id
+  - manifest_id
+  - runtime_target
+  - workflow_id
+  - trigger_source
+  - generated_at
+  - source_paths
+  - card_count
+  - canonical_writeback_enabled
+
+audit_identity:
+  schedule_id: hermes_runtime_pulse
+  trigger_source: native_chaseos_schedule_intent
+  owner: chaseos
+  executor_is_adapter_only: true
+
+notes: >
+  First inactive native schedule manifest shape for Hermes runtime Pulse cards.
+  Hermes may be a deck subject, but ChaseOS remains the owner of schedule,
+  schema, feedback, and writeback policy.

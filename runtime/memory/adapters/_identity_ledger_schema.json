@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_version": "1.0",
+  "title": "ChaseOS Agent Identity Ledger",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "layer",
+    "memory_family",
+    "runtime_id",
+    "status",
+    "updated_at",
+    "identity_summary",
+    "behavioral_tendencies",
+    "doctrine_adherence",
+    "correction_history",
+    "drift_signals",
+    "governance_boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "layer": {
+      "const": "C"
+    },
+    "memory_family": {
+      "const": "agent_identity_ledger"
+    },
+    "runtime_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+$"
+    },
+    "runtime_label": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "identity_summary": {
+      "type": "object"
+    },
+    "behavioral_tendencies": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "doctrine_adherence": {
+      "type": "object"
+    },
+    "correction_history": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "workflow_history_posture": {
+      "type": "object"
+    },
+    "memory_cluster_influence": {
+      "type": "object"
+    },
+    "drift_signals": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "authority_boundaries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "promotion_rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "governance_boundary": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

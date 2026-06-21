@@ -1,0 +1,31 @@
+runtime_id: "archon"
+platform: "local-session"
+lifecycle_mode: "manual"
+coordination_watch:
+  enabled: true
+  runtime_name: "Archon"
+  interval_seconds: 60
+  claim_next: true
+  stale_after_seconds: 900
+  supervision:
+    enabled: false
+    autostart: false
+    restart_policy: "manual"
+    state_file: "runtime/lifecycle/run/archon-coordination-watch.json"
+    log_file: "runtime/lifecycle/run/archon-coordination-watch.log"
+    notes: "Archon is session-scoped; a visible Claude Code/archon_watch session provides liveness."
+  notes: "Archon remains a registered bus runtime even when no Claude Code session is active."
+start:
+  kind: "manual-session"
+  command: "claude"
+stop:
+  kind: "manual-session"
+  command: "operator ends Claude Code session"
+restart:
+  kind: "manual-session"
+  command: "operator starts a new Claude Code session"
+health:
+  kind: "heartbeat"
+  expected_hint: "Fresh Archon Agent Bus heartbeat from archon_watch or active Claude Code handoff."
+ownership: "session-scoped-engineering-runtime"
+notes: "Archon is the Claude Code engineering runtime. Registration identity is stable; active/reachable state depends on the corresponding session/watch loop being running."

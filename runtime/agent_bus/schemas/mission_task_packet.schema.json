@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chaseos/runtime/agent_bus/schemas/mission_task_packet.schema.json",
+  "title": "ChaseOS Mission Mode Agent Bus Task Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "run_id",
+    "from",
+    "to",
+    "intent",
+    "status",
+    "request",
+    "expected_output",
+    "created_at",
+    "updated_at",
+    "task_type",
+    "mission_id",
+    "mission_workspace_path",
+    "activation_approval_packet_path",
+    "write_policy",
+    "forbidden_actions",
+    "allowed_result_shapes",
+    "execution_constraints",
+    "agent_bus_task_written",
+    "activation_performed",
+    "workflow_evolution_applied"
+  ],
+  "properties": {
+    "task_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "reply_to": {"type": ["string", "null"]},
+    "from": {
+      "type": "string",
+      "enum": ["Operator", "OpenClaw", "Hermes", "Codex"]
+    },
+    "to": {
+      "type": "string",
+      "enum": ["Codex", "Hermes", "OpenClaw"]
+    },
+    "intent": {
+      "type": "string",
+      "const": "TASK"
+    },
+    "status": {
+      "type": "string",
+      "const": "open"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["low", "normal", "high", "critical"],
+      "default": "normal"
+    },
+    "owner": {"type": ["string", "null"]},
+    "request": {"type": "string", "minLength": 1},
+    "expected_output": {"type": "string", "minLength": 1},
+    "depends_on": {
+      "type": "array",
+      "items": {"type": "string"},
+      "default": []
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {"type": "string"},
+      "default": []
+    },
+    "task_type": {
+      "type": "string",
+      "const": "mission.run_dry_review"
+    },
+    "mission_id": {"type": "string", "minLength": 1},
+    "mission_workspace_path": {
+      "type": "string",
+      "pattern": "^07_LOGS/VentureOps-Missions/.+"
+    },
+    "activation_approval_packet_path": {
+      "type": "string",
+      "pattern": "^07_LOGS/VentureOps-Missions/.+"
+    },
+    "write_policy": {
+      "type": "string",
+      "const": "declared-paths"
+    },
+    "forbidden_actions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "mission_activation",
+          "aor_dispatch",
+          "agent_bus_task_write",
+          "workflow_evolution_apply",
+          "provider_call",
+          "browser_action",
+          "browser_skill_activation",
+          "external_send",
+          "crm_or_payment_mutation",
+          "live_trading",
+          "protected_file_edit",
+          "canonical_promotion",
+          "credential_or_secret_read"
+        ]
+      },
+      "contains": {"const": "mission_activation"}
+    },
+    "allowed_result_shapes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["proposal", "patch", "risk", "blocked", "complete"]
+      }
+    },
+    "execution_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allow_shell_commands",
+        "allow_live_subprocess",
+        "write_policy",
+        "allowed_write_paths"
+      ],
+      "properties": {
+        "allow_shell_commands": {"type": "boolean", "const": false},
+        "allow_live_subprocess": {"type": "boolean", "const": false},
+        "write_policy": {"type": "string", "const": "declared-paths"},
+        "allowed_write_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "07_LOGS/VentureOps-Missions/",
+              "07_LOGS/Workflow-Proofs/",
+              "07_LOGS/Runtime-Audits/"
+            ]
+          }
+        }
+      }
+    },
+    "agent_bus_task_written": {"type": "boolean", "const": false},
+    "activation_performed": {"type": "boolean", "const": false},
+    "workflow_evolution_applied": {"type": "boolean", "const": false},
+    "notes": {"type": "string"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": ["string", "null"], "format": "date-time"}
+  }
+}

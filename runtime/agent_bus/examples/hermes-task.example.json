@@ -1,0 +1,22 @@
+{
+  "task_id": "bootstrap-001",
+  "run_id": "dual-runtime-bootstrap-2026-04-24",
+  "reply_to": null,
+  "from": "Hermes",
+  "to": "OpenClaw",
+  "intent": "TASK",
+  "status": "open",
+  "priority": "high",
+  "owner": null,
+  "request": "Read the ChaseOS coordination bus bridge docs, validate that runtime/agent_bus/ exists, and report any bridge gaps that would block bounded OpenClaw participation.",
+  "expected_output": "A RESULT packet with exact blocking gaps, ready paths, and any required next actions.",
+  "depends_on": [],
+  "artifacts": [
+    "runtime/agent_bus/Agent-Bus-Folder-Guide.md",
+    "runtime/openclaw/coordination_bridge.md"
+  ],
+  "notes": "Bootstrap validation task for first dual-runtime coordination pass.",
+  "created_at": "2026-04-24T01:23:46+01:00",
+  "updated_at": "2026-04-24T01:23:46+01:00",
+  "expires_at": null
+}

@@ -1,0 +1,3 @@
+# Workspace objects are stored here as JSON files.
+# Naming: {workspace_id}/workspace.json
+# See: runtime/source_intelligence/schemas/workspace_schema.md

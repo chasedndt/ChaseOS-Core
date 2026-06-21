@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chaseos-core"
+version = "0.1.0"
+description = "ChaseOS Core — MIT-licensed local-first runtime foundation + framework: Agent Bus coordination, native Schedule layer, governance contracts, and instance templates."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "ChaseOS Ltd." }]
+keywords = ["chaseos", "agent-bus", "local-first", "runtime", "coordination"]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.0",
+    "pytest-cov>=7.0.0",
+    "PyYAML>=6.0.0",
+]
+
+[project.urls]
+Homepage = "https://chaseos.ai"
+Source = "https://github.com/chasedndt/ChaseOS-Core"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["runtime*"]
