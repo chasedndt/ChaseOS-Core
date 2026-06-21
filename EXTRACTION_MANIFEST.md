@@ -204,3 +204,29 @@ clean; history is not.
 
 **Loop paused** pending operator decision on the history rewrite + remaining HIGH
 cluster (providers/events/siteops/aor/mcp/workflows — need the Core Gate-interface).
+
+## Core growth pass 5 + (b) Core-vs-Studio candidate calls (2026-06-21)
+
+**Gate-interface (ADR-0014):** built `runtime/gate_interface.py` (Core port; delegates to
+the proprietary Control Kernel when present, deny-by-default fallback otherwise) and
+repointed the clean 4-function gate consumers in aor/events/siteops/mcp. Monorepo
+verified (delegation parity; events+aor tests 7 passed). The port ships to Core with the
+first HIGH-cluster module that uses it; the cluster's bigger blockers are cli + aor.
+
+**Candidate eligibility calls (b):**
+- **voice → EXTRACTED** (Core): provider-agnostic STT/TTS foundation (the engine, not the
+  Studio UI). hermes-audio adapter optionalized in `provider_registry.py` (guarded import +
+  conditional registration; monorepo still registers it). Excluded `adapters/hermes_audio.py`
+  + `tests/test_voice_adapters_extra.py`. Boundary 24/24; voice suite 39 passed; secret 0.
+- **companion → DEFER (needs sanitization):** framework (schema/policy/selection/memory) is
+  Core, but `roster.py` + `name_loader.py` hardcode the specific runtime lineup
+  (hermes/openclaw/claude-code/chaser) + instance profile paths. Genericize before shipping.
+- **workflow_packs → DEFER (mixed):** framework primitives are Core, but it also contains a
+  Studio `panel.py` + specific product packs (creative_studio/research_intelligence). Needs
+  separating Core primitives from the Studio/product surface.
+- **scripts → not Core** (single vault-backfill utility). **hermes / openclaw → not Core**
+  (specific-runtime adapters with `model_config.yaml` + `soul.md` = instance; sanitized
+  runtime-profile templates already ship via the export manifest).
+
+Core now also includes runtime.voice. Remaining: companion (sanitize), workflow_packs
+(separate), and the HIGH cluster (cli → aor → events/mcp/siteops/workflows/providers).
