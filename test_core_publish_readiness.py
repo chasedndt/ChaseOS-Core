@@ -36,6 +36,8 @@ EXCLUDED = (
     "runtime.chaseos_gate",
     "runtime.cli",
     "runtime.config",
+    "runtime.hermes",
+    "runtime.openclaw",
 )
 
 # Core packages that must import cleanly with the standard library only.
@@ -58,6 +60,7 @@ CORE_PACKAGES = (
     "runtime.install_safety",
     "runtime.audit_writeback",
     "runtime.installer",
+    "runtime.voice",
 )
 
 
