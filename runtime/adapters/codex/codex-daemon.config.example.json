@@ -1,0 +1,7 @@
+{
+  "codex_binary": "codex",
+  "poll_interval_seconds": 30,
+  "timeout_seconds": 900,
+  "task_type": "code.patch",
+  "notes": "Copy to codex-daemon.config.json or set CHASEOS_CODEX_BINARY to point at the Codex CLI executable. Do not commit secrets here."
+}

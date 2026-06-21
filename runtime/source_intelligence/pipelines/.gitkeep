@@ -1,0 +1,4 @@
+# Pipeline definitions and processing configurations stored here.
+# Naming: {pipeline_name}.yaml
+# Controls: chunking strategy, retrieval parameters, output format templates
+# See: runtime/source_intelligence/SIC-Provider-Adapter-Standard.md

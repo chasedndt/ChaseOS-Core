@@ -1,0 +1,55 @@
+schema_version: "0.1"
+title: "ChaseOS Provenance Schema"
+description: >-
+  Minimum append-only provenance block for lineage-aware ChaseOS artifacts.
+required_fields:
+  - source_ids
+  - processing_stage
+  - verification_status
+  - lineage_chain
+  - created_at
+  - last_modified_at
+  - operator_reviewed_at
+  - source_refs
+  - audit_refs
+processing_stage:
+  allowed_values:
+    - raw_capture
+    - quarantine
+    - normalized
+    - source_package
+    - briefing_input
+    - generated
+    - reviewed
+    - promoted
+    - canonical
+verification_status:
+  allowed_values:
+    - unverified
+    - operator_reviewed
+    - cross_referenced
+    - verified
+field_types:
+  source_ids: list[str]
+  processing_stage: str
+  verification_status: str
+  lineage_chain: list[object]
+  created_at: iso8601
+  last_modified_at: iso8601
+  operator_reviewed_at: iso8601|null
+  source_refs: list[str]
+  audit_refs: list[str]
+lineage_entry:
+  required_fields:
+    - stage
+    - ref
+    - timestamp
+  field_types:
+    stage: str
+    ref: str
+    timestamp: iso8601
+rules:
+  - provenance is append-only
+  - lineage entries must use allowed processing stages
+  - provenance refs must point to real ChaseOS source or audit artifacts when available
+  - partial lineage is allowed; fabricated lineage is forbidden

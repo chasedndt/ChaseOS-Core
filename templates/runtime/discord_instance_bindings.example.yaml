@@ -1,0 +1,21 @@
+version: 1
+description: "Public-safe Discord binding example. Replace env references in private local config only."
+discord:
+  token_ref: "env:DISCORD_BOT_CREDENTIAL_REF"
+  guild_ref: "env:DISCORD_GUILD_ID"
+  channels:
+    operator: "env:DISCORD_OPERATOR_CHANNEL_ID"
+    review: "env:DISCORD_REVIEW_CHANNEL_ID"
+    runtime_status: "env:DISCORD_RUNTIME_STATUS_CHANNEL_ID"
+identities:
+  operator:
+    user_ref: "env:DISCORD_OPERATOR_USER_ID"
+    role: "operator"
+    authority_ceiling: "approval_review"
+routing:
+  default_runtime: "Hermes"
+  approval_required_task_types:
+    - "code.patch"
+    - "host.mutate"
+    - "external.publish"
+    - "canonical.write"

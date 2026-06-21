@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chaseos/runtime/agent_bus/event.schema.json",
+  "title": "ChaseOS Runtime Coordination Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "task_id",
+    "run_id",
+    "from",
+    "event_type",
+    "message",
+    "created_at"
+  ],
+  "properties": {
+    "event_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "from": {"type": "string", "minLength": 1},
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "created",
+        "claimed",
+        "started",
+        "blocked",
+        "review_requested",
+        "review_completed",
+        "result_attached",
+        "completed",
+        "cancelled",
+        "expired",
+        "notice"
+      ]
+    },
+    "message": {"type": "string", "minLength": 1},
+    "artifacts": {
+      "type": "array",
+      "items": {"type": "string"},
+      "default": []
+    },
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}

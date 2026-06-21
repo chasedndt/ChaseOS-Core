@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "layer",
+    "memory_family",
+    "runtime_id",
+    "status",
+    "repair_patterns",
+    "incident_candidates"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "layer": {"const": "C"},
+    "memory_family": {"const": "execution_repair"},
+    "runtime_id": {"type": "string"},
+    "status": {"type": "string"},
+    "repair_patterns": {"type": "array"},
+    "incident_candidates": {"type": "array"}
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chaseos.local/schemas/audit_writeback.v2.schema.json",
+  "title": "ChaseOS Audit Writeback v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "writeback_id",
+    "title",
+    "runtime",
+    "lane",
+    "status",
+    "verdict",
+    "authority_scope",
+    "risk_level",
+    "created_at",
+    "summary",
+    "evidence",
+    "artifacts",
+    "blockers",
+    "next_action",
+    "discord"
+  ],
+  "properties": {
+    "schema_version": {"const": "audit_writeback.v2"},
+    "writeback_id": {"type": "string", "minLength": 3},
+    "title": {"type": "string", "minLength": 3},
+    "runtime": {"type": "string", "minLength": 2},
+    "lane": {"type": "string", "minLength": 2},
+    "status": {"enum": ["complete", "needs_review", "blocked", "failed", "in_progress"]},
+    "verdict": {"type": "string", "minLength": 3},
+    "authority_scope": {"enum": ["read_only", "draft_write", "approval_gated", "blocked"]},
+    "risk_level": {"enum": ["low", "medium", "high"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["one_line", "operator_readable"],
+      "properties": {
+        "one_line": {"type": "string"},
+        "operator_readable": {"type": "string"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tests", "visual_proof", "file_proof", "commands"],
+      "properties": {
+        "tests": {"type": "array", "items": {"$ref": "#/$defs/evidence_item"}},
+        "visual_proof": {"type": "array", "items": {"$ref": "#/$defs/evidence_item"}},
+        "file_proof": {"type": "array", "items": {"$ref": "#/$defs/evidence_item"}},
+        "commands": {"type": "array", "items": {"$ref": "#/$defs/evidence_item"}}
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["changed_files", "generated_files", "logs", "screenshots"],
+      "properties": {
+        "changed_files": {"type": "array", "items": {"type": "string"}},
+        "generated_files": {"type": "array", "items": {"type": "string"}},
+        "logs": {"type": "array", "items": {"type": "string"}},
+        "screenshots": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "blockers": {"type": "array", "items": {"$ref": "#/$defs/blocker"}},
+    "next_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "label", "target"],
+      "properties": {
+        "type": {"enum": ["continue", "approve", "review", "rerun", "route", "none"]},
+        "label": {"type": "string"},
+        "target": {"type": "string"}
+      }
+    },
+    "discord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["embed", "card_markdown"],
+      "properties": {
+        "embed": {"$ref": "#/$defs/discord_embed"},
+        "card_markdown": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "evidence_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "result"],
+      "properties": {
+        "label": {"type": "string"},
+        "result": {"enum": ["pass", "fail", "blocked", "info", "not_run"]},
+        "command": {"type": "string"},
+        "artifact": {"type": "string"},
+        "context": {"type": "string"}
+      }
+    },
+    "blocker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blocker", "owner_surface", "required_approval", "minimum_proof_needed"],
+      "properties": {
+        "blocker": {"type": "string"},
+        "owner_surface": {"type": "string"},
+        "required_approval": {"type": "string"},
+        "minimum_proof_needed": {"type": "string"}
+      }
+    },
+    "discord_embed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "description", "color", "fields", "footer"],
+      "properties": {
+        "title": {"type": "string"},
+        "description": {"type": "string"},
+        "color": {"type": "integer", "minimum": 0, "maximum": 16777215},
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "value", "inline"],
+            "properties": {
+              "name": {"type": "string"},
+              "value": {"type": "string"},
+              "inline": {"type": "boolean"}
+            }
+          }
+        },
+        "footer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["text"],
+          "properties": {"text": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

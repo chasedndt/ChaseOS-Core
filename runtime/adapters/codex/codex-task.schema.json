@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chaseos/runtime/adapters/codex/codex-task.schema.json",
+  "title": "ChaseOS Codex Bus Adapter Task Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "task_id", "run_id", "to", "task_type", "request", "expected_output", "repo_root", "constraints", "allowed_write_paths", "allow_shell_commands", "allow_live_subprocess", "created_at"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "task_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "to": {"const": "Codex"},
+    "task_type": {"type": "string", "enum": ["code.review", "code.patch", "repo.inspect", "test.run"]},
+    "request": {"type": "string", "minLength": 1},
+    "expected_output": {"type": "string", "minLength": 1},
+    "repo_root": {"type": "string", "minLength": 1},
+    "constraints": {"type": "array", "items": {"type": "string"}},
+    "allowed_write_paths": {"type": "array", "items": {"type": "string"}},
+    "allow_shell_commands": {"type": "boolean"},
+    "allow_live_subprocess": {"type": "boolean"},
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}

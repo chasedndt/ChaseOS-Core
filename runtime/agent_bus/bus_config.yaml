@@ -1,0 +1,46 @@
+# bus_config.yaml — ChaseOS Agent Bus Backend Configuration
+#
+# This file declares which storage backend the agent coordination bus uses.
+# It lives at runtime/agent_bus/bus_config.yaml inside the vault.
+#
+# TWO MODES
+# ---------
+# local   — SQLite, single machine, zero infrastructure. Default.
+#           Right for: personal use, development, all runtimes on one machine.
+#           The DB lives at: runtime/agent_bus/agent_bus.sqlite in this vault.
+#
+# server  — HTTP/WebSocket server, multi-machine, VPS-capable. Phase 10.
+#           Right for: multiple runtimes on separate machines, web/mobile
+#           dashboards with live push, multi-user / multi-tenant deployments.
+#           Requires a running ChaseOS server process and a connection string.
+#
+# SWITCHING MODES
+# ---------------
+# Change `mode` to `server` and fill in the server block below.
+# All handlers, workflows, and AOR engine code stay unchanged — only this
+# file and the backend_loader change. That is the point of the abstraction.
+#
+# IMPORTANT: If you change mode on an existing vault, existing SQLite tasks
+# will NOT be migrated automatically. Run `chaseos agent-bus migrate` (Phase 10)
+# or accept that historical tasks remain in the SQLite file only.
+
+mode: local
+
+# ── Local mode configuration ──────────────────────────────────────────────────
+# Active when mode=local. SQLiteBackend uses these settings.
+# Currently only the defaults are supported; this block is reserved for future
+# options (e.g. db_filename override, WAL checkpoint interval).
+
+local:
+  # db_filename: agent_bus.sqlite   # default — relative to runtime/agent_bus/
+
+# ── Server mode configuration ─────────────────────────────────────────────────
+# Uncomment and fill in when mode=server.
+# API key is read from the environment variable named by api_key_env —
+# never put secrets directly in this file.
+
+# server:
+#   api_url: http://localhost:8765          # ChaseOS server base URL
+#   websocket_url: ws://localhost:8765/ws  # WebSocket endpoint for live push
+#   api_key_env: CHASEOS_BUS_API_KEY       # env var holding the API key
+#   timeout_seconds: 10                    # HTTP request timeout

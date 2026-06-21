@@ -1,0 +1,101 @@
+# ChaseOS Pulse native schedule manifest shape
+# Status: scaffolded / inactive
+
+manifest_id: chaseos_pulse_daily
+schedule_id: chaseos_pulse_daily
+feature: chaseos_pulse
+owner: chaseos
+status: scaffolded
+enabled: false
+activation_state: planned
+
+cadence:
+  type: daily
+  local_time: "07:15"
+  timezone: Europe/London
+  preferred_window: overnight
+  not_before: "02:00"
+  not_after: "07:30"
+
+execution:
+  schedule_owner: chaseos
+  runtime_owner: chaseos
+  executor_adapter: native_chaseos_scheduler_planned
+  workflow_id: chaseos_pulse_generate
+  allowed_runtime_adapters:
+    - hermes
+    - openclaw
+    - codex
+    - claude_code
+    - local
+  external_runtime_owner: false
+  openclaw_cron_owner: false
+  windows_task_scheduler_owner: false
+
+delivery:
+  target: local_pulse_deck_archive
+  output_root: "07_LOGS/Pulse-Decks/users/"
+
+missed_run_policy:
+  if_machine_off: catch_up_once
+  if_server_down: queue_pending
+  if_runtime_unavailable: defer_to_review
+  if_approval_timeout: create_review_card
+
+approval_policy:
+  default: no_canonical_writeback
+  requires_approval_for:
+    - creating_tasks
+    - editing_project_files
+    - promoting_memory_atoms
+    - invoking_external_connectors
+    - contacting_external_services
+    - publishing_content
+
+deck:
+  audience: user
+  output_format:
+    - markdown
+    - json
+  writeback_targets:
+    - "07_LOGS/Operator-Briefs/"
+  canonical_writeback_enabled: false
+
+source_policy:
+  allowed_local_sources:
+    - "00_HOME/Now.md"
+    - "00_HOME/Dashboard.md"
+    - "01_PROJECTS/"
+    - "07_LOGS/Build-Logs/"
+    - "07_LOGS/Agent-Activity/"
+    - "runtime/memory/"
+    - "runtime/source_intelligence/"
+    - "runtime/workflows/registry/"
+  external_connectors_enabled: false
+  unrestricted_browsing_enabled: false
+
+feedback_policy_ref: "06_AGENTS/Pulse-Feedback-Policy.md"
+card_schema_ref: "06_AGENTS/Pulse-Card-Schema.md"
+architecture_ref: "06_AGENTS/ChaseOS-Pulse-Architecture.md"
+
+audit_requirements:
+  - schedule_id
+  - manifest_id
+  - workflow_id
+  - trigger_source
+  - generated_at
+  - source_paths
+  - card_count
+  - feedback_policy_ref
+  - canonical_writeback_enabled
+
+audit_identity:
+  schedule_id: chaseos_pulse_daily
+  trigger_source: native_chaseos_schedule_intent
+  owner: chaseos
+  executor_is_adapter_only: true
+
+notes: >
+  First inactive native schedule manifest shape for the user/operator Pulse deck.
+  This is ChaseOS-owned schedule intent and does not make OpenClaw, Windows Task
+  Scheduler, Hermes, or any external runtime the owner of Pulse.

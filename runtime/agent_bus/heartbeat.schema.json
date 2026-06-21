@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chaseos/runtime/agent_bus/heartbeat.schema.json",
+  "title": "ChaseOS Runtime Coordination Heartbeat",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "runtime",
+    "status",
+    "last_seen",
+    "health"
+  ],
+  "properties": {
+    "heartbeat_key": {"type": "string", "minLength": 1},
+    "runtime": {"type": "string", "minLength": 1},
+    "runtime_instance_id": {"type": ["string", "null"]},
+    "heartbeat_scope": {"type": "string", "enum": ["runtime", "instance"]},
+    "control_surface": {"type": ["string", "null"]},
+    "control_surface_key": {"type": ["string", "null"]},
+    "status": {"type": "string", "enum": ["idle", "busy", "blocked", "offline"]},
+    "current_task_id": {"type": ["string", "null"]},
+    "health": {"type": "string", "enum": ["ok", "degraded", "error"]},
+    "summary": {"type": "string"},
+    "last_seen": {"type": "string", "format": "date-time"}
+  }
+}

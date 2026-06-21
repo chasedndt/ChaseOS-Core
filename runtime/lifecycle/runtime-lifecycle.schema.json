@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ChaseOS Runtime Lifecycle Record",
+  "type": "object",
+  "required": [
+    "runtime_id",
+    "platform",
+    "lifecycle_mode",
+    "coordination_watch",
+    "start",
+    "stop",
+    "restart",
+    "health"
+  ],
+  "properties": {
+    "runtime_id": { "type": "string" },
+    "platform": { "type": "string" },
+    "lifecycle_mode": {
+      "type": "string",
+      "enum": ["external-service", "direct-process", "wrapper-script", "wsl-process", "manual"]
+    },
+    "coordination_watch": {
+      "type": "object",
+      "required": ["enabled", "runtime_name", "interval_seconds", "claim_next"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "runtime_name": { "type": "string" },
+        "interval_seconds": { "type": "integer", "minimum": 1 },
+        "claim_next": { "type": "boolean" },
+        "stale_after_seconds": { "type": ["integer", "null"] },
+        "supervision": {
+          "type": ["object", "null"],
+          "required": ["enabled", "autostart", "restart_policy", "state_file", "log_file"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "autostart": { "type": "boolean" },
+            "restart_policy": { "type": "string", "enum": ["manual", "on-failure", "always"] },
+            "state_file": { "type": "string" },
+            "log_file": { "type": "string" },
+            "notes": { "type": ["string", "null"] }
+          },
+          "additionalProperties": true
+        },
+        "bootstrap": {
+          "type": ["object", "null"],
+          "required": ["enabled", "registration_kind", "trigger", "task_name", "launcher_path", "registration_artifact"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "registration_kind": { "type": "string", "enum": ["windows-task-scheduler"] },
+            "trigger": { "type": "string", "enum": ["on-logon", "on-startup"] },
+            "task_name": { "type": "string" },
+            "launcher_path": { "type": "string" },
+            "registration_artifact": { "type": "string" },
+            "handoff_script_path": { "type": ["string", "null"] },
+            "handoff_artifact_path": { "type": ["string", "null"] },
+            "reboot_verify_script_path": { "type": ["string", "null"] },
+            "reboot_verify_artifact_path": { "type": ["string", "null"] },
+            "reboot_verify_result_path": { "type": ["string", "null"] },
+            "success_record_path": { "type": ["string", "null"] },
+            "event_log_path": { "type": ["string", "null"] },
+            "wsl_distro": { "type": ["string", "null"] },
+            "notes": { "type": ["string", "null"] }
+          },
+          "additionalProperties": true
+        },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "start": {
+      "type": "object",
+      "required": ["kind", "command"],
+      "properties": {
+        "kind": { "type": "string" },
+        "command": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "stop": {
+      "type": "object",
+      "required": ["kind", "command"],
+      "properties": {
+        "kind": { "type": "string" },
+        "command": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "restart": {
+      "type": "object",
+      "required": ["kind", "command"],
+      "properties": {
+        "kind": { "type": "string" },
+        "command": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "health": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string" },
+        "command": { "type": ["string", "null"] },
+        "expected_hint": { "type": ["string", "null"] },
+        "url": { "type": ["string", "null"] },
+        "urls": {
+          "type": ["array", "null"],
+          "items": { "type": "string" }
+        },
+        "candidate_ports": {
+          "type": ["array", "null"],
+          "items": { "type": "integer" }
+        },
+        "success_status": { "type": ["integer", "null"] },
+        "timeout_seconds": { "type": ["integer", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "startup_surfaces": {
+      "type": ["object", "null"],
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "surface_id",
+          "surface_type",
+          "ui_label",
+          "supported",
+          "toggle_supported",
+          "current_state_source",
+          "startup_registration_kind",
+          "mutation_status"
+        ],
+        "properties": {
+          "surface_id": { "type": "string" },
+          "surface_type": {
+            "type": "string",
+            "enum": [
+              "gateway_launcher",
+              "coordination_watch_supervisor",
+              "coordination_watch_bootstrap",
+              "service_binding",
+              "custom"
+            ]
+          },
+          "ui_label": { "type": "string" },
+          "supported": { "type": "boolean" },
+          "toggle_supported": { "type": "boolean" },
+          "current_state_source": {
+            "type": "string",
+            "enum": [
+              "host_startup_file",
+              "coordination_watch_supervisor",
+              "coordination_watch_bootstrap",
+              "declared"
+            ]
+          },
+          "startup_registration_kind": {
+            "type": "string",
+            "enum": [
+              "windows-startup-folder",
+              "windows-task-scheduler",
+              "host-process",
+              "service-manager",
+              "launch-agent",
+              "cron",
+              "none",
+              "custom"
+            ]
+          },
+          "mutation_status": {
+            "type": "string",
+            "enum": ["planned", "configured-but-ui-unbuilt", "unsupported"]
+          },
+          "launcher_path": { "type": ["string", "null"] },
+          "target_path": { "type": ["string", "null"] },
+          "launcher_template_version": { "type": ["string", "null"] },
+          "launch_kind": { "type": ["string", "null"], "enum": ["wsl", "windows-cmd", "native", null] },
+          "wsl_distro": { "type": ["string", "null"] },
+          "wsl_user": { "type": ["string", "null"] },
+          "wsl_workdir": { "type": ["string", "null"] },
+          "wsl_command": { "type": ["string", "null"] },
+          "diagnostic_log_path": { "type": ["string", "null"] },
+          "retry_attempts": { "type": ["integer", "null"] },
+          "retry_delay_seconds": { "type": ["integer", "null"] },
+          "status_command": { "type": ["string", "null"] },
+          "enable_command": { "type": ["string", "null"] },
+          "disable_command": { "type": ["string", "null"] },
+          "notes": { "type": ["string", "null"] }
+        },
+        "additionalProperties": true
+      }
+    },
+    "ownership": { "type": ["string", "null"] },
+    "notes": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

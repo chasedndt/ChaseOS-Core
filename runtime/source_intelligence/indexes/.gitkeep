@@ -1,0 +1,4 @@
+# Local embedding indexes stored here.
+# These are never sent to third-party storage services.
+# Naming: {workspace_id}/ or {source_id}.index
+# See: runtime/source_intelligence/schemas/source_package_schema.md (index_path field)

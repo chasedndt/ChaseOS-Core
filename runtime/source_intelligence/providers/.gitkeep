@@ -1,0 +1,4 @@
+# Provider adapter YAML configs are stored here.
+# Naming: {provider_name}.yaml (e.g., anthropic.yaml, openai.yaml, local.yaml)
+# See: runtime/source_intelligence/SIC-Provider-Adapter-Standard.md
+# IMPORTANT: API credentials are NEVER stored in these files.
