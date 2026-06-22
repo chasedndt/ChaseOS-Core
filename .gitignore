@@ -1,88 +1,114 @@
-# ===== Build / tooling =====
-__pycache__/
-*.py[cod]
-.venv/
-.venv-*/
-*.egg-info/
-dist/
-build/
-.pytest_cache/
-.pytest_tmp*/
-*.db
-*.db-wal
-*.db-shm
-.DS_Store
+# ============================================================
+# ChaseOS .gitignore
+# ============================================================
+# Tracks: vault markdown, runtime code, policy, manifests, templates.
+# Never tracks: credentials, env files, local state, large artifacts,
+#               Python cache, venv, Obsidian app config, SQLite dbs.
+# ============================================================
 
-# ===== Secrets / credentials (never commit) =====
+# --- Credentials and secrets ---
 .env
 .env.*
 !.env.example
 *.key
 *.pem
-credentials*.json
+*.p12
+secrets/
+credentials/
 
-# ===== YOUR PERSONAL INSTANCE — never commit your private vault data =====
-# ChaseOS Core ships *templates and synthetic examples* (tracked below via the
-# `!` negations). When you run your own instance you create real notes, projects,
-# logs, identity, and runtime state in these folders — those stay PRIVATE on your
-# machine and must never be committed to a Core fork.
-# See docs/getting-started/Core-vs-Personal.md.
+# --- Python runtime ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
 
-# Identity (only the template ships)
-/SOUL.md
+# --- Test and temp artifacts ---
+.pytest_cache/
+.pytest-tmp/
+.pytest_tmp/
+.pytest_tmp_env/
+.codex/
+.codex-*/
+.codex_tmp/
+.codex_tmp_test/
+.tmp/
+*.tmp
 
-# Home — keep README + *.example.md, ignore your real notes
-/00_HOME/*
-!/00_HOME/README.md
-!/00_HOME/*.example.md
+# --- Obsidian app config (not content) ---
+.obsidian/
 
-# Projects — keep README + the synthetic example only
-/01_PROJECTS/*
-!/01_PROJECTS/README.md
-!/01_PROJECTS/Example-Project-OS.md
+# --- ChaseOS runtime state (local machine state, not code) ---
+.chaseos/
+# Includes machine-local Discord bindings such as
+# .chaseos/discord_instance_bindings.yaml.
+# .chaseos/ contains: dedup_registry.json, watch_folders.json,
+# watch_processed.json, config.yaml — all local machine state,
+# not portable or meaningful in version control.
 
-# Knowledge — keep README + *.example.md
-/02_KNOWLEDGE/*
-!/02_KNOWLEDGE/README.md
-!/02_KNOWLEDGE/*.example.md
-
-# Inputs — keep README only (raw/untrusted captures stay local)
-/03_INPUTS/*
-!/03_INPUTS/README.md
-
-# Logs — keep the folder READMEs + example indexes, ignore real logs
-/07_LOGS/**
-!/07_LOGS/**/
-!/07_LOGS/README.md
-!/07_LOGS/**/*.example.md
-
-# Archive — keep README + example index
-/99_ARCHIVE/*
-!/99_ARCHIVE/README.md
-!/99_ARCHIVE/Documentation-History/
-!/99_ARCHIVE/Documentation-History/*.example.md
-
-# Runtime / instance state, memory, and local config (never published)
-/.chaseos/
-/.hermes/
-/.obsidian/
-runtime/memory/nav/
-runtime/lifecycle/run/
-runtime/lifecycle/state/
-runtime/agent_bus/*.db
-
-# Runtime memory is per-instance state — Core ships the memory code + schemas +
-# READMEs only, never populated per-runtime profiles/ledgers/scorecards/repair.
-runtime/memory/adapters/**/*.json
-!runtime/memory/adapters/_identity_ledger_schema.json
-runtime/memory/scorecards/*.json
-runtime/memory/repair/*.json
-!runtime/memory/repair/_schema.json
-
-# Instance execution artifacts + populated workspaces are per-instance state, not Core.
-runtime/adapters/*/runs/
-runtime/source_intelligence/workspaces/*/
+# --- SQLite databases (agent bus, artifact store) ---
+*.db
+*.db-wal
+*.db-shm
 *.sqlite
+runtime/agent_bus/*.db*
+runtime/acquisition/artifact_store.db*
+
+# --- Large runtime artifacts (generated, not source) ---
+runtime/acquisition/packs/
+runtime/scaffold/generated/
+07_LOGS/Operator-Screenshots/
+
+# --- Studio shell state ---
+runtime/studio/approvals/
+runtime/studio/shell/frontend/assets/cytoscape.min.js
+
+# --- Native Runtime Chat event bridge — operational state + secrets (never commit) ---
+# native-state holds the SQLite event store, JSONL event stores, per-adapter
+# cursors, health snapshots, emitter sequence state, approval/audit records,
+# and — critically — the local HMAC signing keys. All generated local state.
+runtime/studio/chat/native-state/
+# Belt-and-suspenders for the signing keys even if native-state/ is ever un-ignored.
+runtime/studio/chat/native-state/runtime-event-keys/
+# Append-only runtime event spool + dead-letter queue (operational, can grow).
+07_LOGS/Runtime-Events/
+# Security self-detection telemetry: gate-denial log + behavior-tripwire reports
+# (machine-local operational state, like Runtime-Events above).
+07_LOGS/Runtime-Audits/
+# SQLite WAL/shm sidecars for the chat event store (extends *.sqlite above).
 *.sqlite-wal
 *.sqlite-shm
-*.sqlite3
+
+# --- Runtime lifecycle and process state ---
+runtime/lifecycle/run/
+runtime/lifecycle/bootstrap/
+runtime/osril/run/
+runtime/events/
+
+# --- Hermes and OpenClaw local state ---
+.hermes/
+.openclaw/
+
+# --- Claude Code local session state (NOT the hooks/settings.json — those are tracked) ---
+.claude/settings.local.json
+.claude/hooks/__pycache__/
+
+# --- VS Code workspace settings (keep .vscode/extensions.json if desired) ---
+.vscode/settings.json
+.vscode/launch.json
+
+# --- macOS artifacts (if ever synced) ---
+.DS_Store
+Thumbs.db
+
+# --- Review-tool / agent worktree snapshots (local-only; contain SQLite DBs,
+#     event spools, and per-pass state — must never be committed) ---
+.gr/
+NUL
+CORE_EXPORT_STATUS.json

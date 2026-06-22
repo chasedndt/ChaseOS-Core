@@ -5,12 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "chaseos-core"
 version = "0.1.0"
-description = "ChaseOS Core — MIT-licensed local-first runtime foundation + framework: Agent Bus coordination, native Schedule layer, governance contracts, and instance templates."
-readme = "README.md"
+description = "ChaseOS Core — privacy-first, local-first agentic OS framework (MIT)"
 requires-python = ">=3.11"
-license = "MIT"
-authors = [{ name = "ChaseOS Ltd." }]
-keywords = ["chaseos", "agent-bus", "local-first", "runtime", "coordination"]
+# Core is stdlib-only. Optional capabilities live behind extras.
 dependencies = []
 
 [project.optional-dependencies]
@@ -19,11 +16,37 @@ dev = [
     "pytest-cov>=7.0.0",
     "PyYAML>=6.0.0",
 ]
+browser = [
+    # Bounded browser/operator surface (runtime/operator_surface/*). Runs in STUB mode
+    # without this; install to enable live browser operation. After: playwright install chromium
+    "playwright>=1.40",
+]
+voice = [
+    # OpenCore on-device voice lane (no API key). STT: faster-whisper. TTS: Piper.
+    "faster-whisper>=1.2.0",
+    "piper-tts>=1.4.0",
+    "sounddevice>=0.5.0",
+    "numpy>=2.0",
+]
 
-[project.urls]
-Homepage = "https://chaseos.ai"
-Source = "https://github.com/chasedndt/ChaseOS-Core"
+# The Core operator CLI is the lean Core entrypoint (NOT the proprietary operator
+# god-module). The full `runtime.cli.main` is not part of MIT Core.
+[project.scripts]
+chaseos = "runtime.cli.core_main:main"
+chase = "runtime.cli.core_main:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["runtime*"]
+
+[tool.pytest.ini_options]
+addopts = "-m 'not slow'"
+markers = [
+    "slow: long-running tests; deselected by default (run with -m slow)",
+]
+
+# ── Notes ──────────────────────────────────────────────────────────────────────
+# Setup:   pip install -e .   then   chaseos doctor
+# `chaseos` is the lean Core CLI (runtime/cli/core_main.py). Optional extras:
+#   pip install -e .[browser]   # live browser operation (then: playwright install chromium)
+#   pip install -e .[voice]     # on-device STT/TTS

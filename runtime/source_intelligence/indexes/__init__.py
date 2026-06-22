@@ -1,1 +1,0 @@
-# SIC indexes package

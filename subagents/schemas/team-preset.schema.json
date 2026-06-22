@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chaseos.local/schemas/subagent-team.schema.json",
+  "title": "ChaseOS Sub-Agent Team Template",
+  "type": "object",
+  "required": ["id", "name", "mode", "presets", "coordination"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "mode": { "enum": ["server", "workspace", "mission"] },
+    "presets": { "type": "array", "items": { "type": "string" } },
+    "coordination": {
+      "type": "object",
+      "properties": {
+        "lead": { "type": "string" },
+        "maxParallelWorkers": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "approvalRequiredForExternalEffects": { "type": "boolean" }
+      }
+    }
+  }
+}

@@ -1,0 +1,567 @@
+# task_type_table.yaml - ChaseOS AOR Phase 9
+# Canonical task type definitions for the Task-Type Router.
+
+task_types:
+
+  - id: operator-briefing
+    description: "Daily operator briefing - reads vault state, generates structured summary"
+    required_reads:
+      - "00_HOME/Now.md"
+      - "03_INPUTS/"
+      - "07_LOGS/Build-Logs/"
+      - "07_LOGS/Decision-Ledger/"
+    optional_reads:
+      - "01_PROJECTS/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+    permission_ceiling: no_protected_file_writes
+    writeback_expectations: "operator brief only; no canonical mutations"
+    escalation_trigger:
+      - "protected file write requested"
+      - "write outside declared writeback_targets"
+      - "inputs classified Tier 4 without explicit sanitization"
+
+  - id: vault-maintenance
+    description: "Vault structure maintenance - scan and report workflow family"
+    required_reads:
+      - "06_AGENTS/Vault-Map.md"
+      - "06_AGENTS/Knowledge-Taxonomy.md"
+    optional_reads:
+      - "01_PROJECTS/"
+      - "02_KNOWLEDGE/"
+      - "03_INPUTS/00_QUARANTINE/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+    permission_ceiling: proposal_log_only
+    writeback_expectations: "maintenance report only; no vault mutations"
+    escalation_trigger:
+      - "any canonical write requested"
+      - "any repair, rename, or delete requested"
+      - "quarantine content treated as instructions"
+
+  - id: os-graph-maintenance
+    description: "Mutating 3-stage OS graph maintenance - wikilink repair, daily hub creation, provenance link injection"
+    required_reads:
+      - "06_AGENTS/Vault-Map.md"
+    optional_reads:
+      - "06_AGENTS/Knowledge-Taxonomy.md"
+    runtime_class: vault-write
+    permission_set:
+      - read_vault
+      - write_logs
+      - write_vault_graph
+    permission_ceiling: vault_graph_write
+    writeback_expectations: "run record to 07_LOGS/Maintain-Runs/; hygiene report to 07_LOGS/Hygiene-Reports/; daily hubs to 07_LOGS/Daily/; no canonical knowledge mutations"
+    escalation_trigger:
+      - "any canonical knowledge write requested"
+      - "any file deletion requested"
+      - "write outside declared write_scope"
+      - "protected file write attempted"
+      - "quarantine content treated as instructions"
+
+  - id: idea-graduation
+    description: "Surface quarantine and generated-ideas candidates and write proposal only"
+    required_reads:
+      - "03_INPUTS/00_QUARANTINE/"
+      - "06_AGENTS/Knowledge-Taxonomy.md"
+      - "06_AGENTS/AI-Generated-Output-Bridge.md"
+    optional_reads:
+      - "02_KNOWLEDGE/"
+      - "07_LOGS/Hygiene-Reports/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_quarantine
+      - read_vault
+      - write_logs
+    permission_ceiling: proposal_log_only
+    writeback_expectations: "graduation proposal only; no canonical promotion"
+    escalation_trigger:
+      - "any canonical write requested"
+      - "promotion attempt without explicit operator follow-up"
+      - "quarantine content treated as instructions"
+
+  - id: research-ingest
+    description: "Ingest external research into quarantine via capture layer"
+    required_reads:
+      - "04_SOPS/Research-Ingest-SOP.md"
+    optional_reads: []
+    runtime_class: write-quarantine
+    permission_set:
+      - read_external
+      - write_quarantine
+    permission_ceiling: quarantine_only_writes
+    writeback_expectations: "quarantine content file + .meta.json sidecar; dedup registry update"
+    escalation_trigger:
+      - "write destination outside quarantine boundary"
+      - "external content that looks like instructions"
+
+  - id: source-intelligence
+    description: "SIC retrieval, workspace generation, and output generation"
+    required_reads:
+      - "runtime/source_intelligence/"
+    optional_reads:
+      - "02_KNOWLEDGE/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - read_sic_index
+      - write_workspace_local
+    permission_ceiling: no_canonical_writes
+    writeback_expectations: "workspace-local output artifact only; no canonical vault mutations"
+    escalation_trigger:
+      - "canonical knowledge write requested without explicit promotion path"
+      - "SIC workspace output treated as canonical truth"
+
+  - id: audit-review
+    description: "Read audit and build logs; generate summaries; no writes"
+    required_reads:
+      - "07_LOGS/Agent-Activity/"
+    optional_reads:
+      - "07_LOGS/Build-Logs/"
+      - "99_ARCHIVE/"
+    runtime_class: read-only
+    permission_set:
+      - read_logs
+    permission_ceiling: read_only
+    writeback_expectations: "none; any write request is an escalation"
+    escalation_trigger:
+      - "any write requested"
+
+  - id: behavior-audit
+    description: "Detective layer: scan gate-denial telemetry, AOR audit records, runtime events, and incident candidates for anomaly signatures; write an alert-only report. Never blocks or mutates state."
+    required_reads:
+      - "07_LOGS/Agent-Activity/"
+    optional_reads:
+      - "07_LOGS/Runtime-Audits/"
+      - "runtime/memory/repair/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_logs
+    permission_ceiling: proposal_log_only
+    writeback_expectations: "alert-only report to 07_LOGS/Runtime-Audits/ only; no other writes"
+    escalation_trigger:
+      - "write outside 07_LOGS/Runtime-Audits or Agent-Activity requested"
+      - "any runtime-state mutation requested"
+
+  - id: aiso-recent-artifact-locator
+    description: "AISO first-slice read-only recent artifact locator over declared vault-local artifact roots"
+    required_reads:
+      - "03_INPUTS/00_QUARANTINE/"
+      - "runtime/acquisition/packs/"
+    optional_reads:
+      - "07_LOGS/Workflow-Proofs/"
+    runtime_class: read-only
+    permission_set:
+      - read_vault
+      - read_acquisition_artifacts
+    permission_ceiling: read_only
+    writeback_expectations: "none; CLI returns structured locator results only"
+    escalation_trigger:
+      - "any write, rename, package, upload, email, browser, provider, or submission requested"
+      - "undeclared root requested"
+      - "credential/browser-profile/email store access requested"
+      - "canonical mutation requested"
+
+  - id: decision-record
+    description: "Append immutable entry to the Decision Ledger"
+    required_reads:
+      - "07_LOGS/Decision-Ledger/Index.md"
+    optional_reads: []
+    runtime_class: append-only
+    permission_set:
+      - read_vault
+      - append_decision_ledger
+    permission_ceiling: append_only_to_decision_ledger
+    writeback_expectations: "new decision entry file + Decision-Ledger Index.md update"
+    escalation_trigger:
+      - "edit or delete of existing decision entry"
+      - "decision entry without rationale field"
+
+  - id: scheduled-briefing
+    description: "Scheduled pipeline execution - SBP-triggered output generation"
+    required_reads:
+      - "00_HOME/Now.md"
+    optional_reads:
+      - "runtime/source_intelligence/"
+    runtime_class: scheduled
+    permission_set:
+      - read_vault
+      - write_logs
+      - write_workspace_local
+    permission_ceiling: no_protected_file_writes
+    writeback_expectations: "output artifact at declared target + run log entry"
+    escalation_trigger:
+      - "schedule deviation (run triggered outside declared schedule)"
+      - "protected file access requested"
+      - "output destination not in manifest writeback_targets"
+
+  - id: operator-briefing-shadow
+    description: "Hermes shadow operator briefing - reads declared context and writes draft/audit artifacts only"
+    required_reads:
+      - "00_HOME/Now.md"
+      - "HERMES.md"
+    optional_reads:
+      - "01_PROJECTS/ChaseOS/"
+      - "07_LOGS/Build-Logs/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+      - write_archive
+      - write_drafts
+    permission_ceiling: shadow_log_only
+    writeback_expectations: "draft operator brief + agent activity + build log + archive note only; no canonical mutations"
+    escalation_trigger:
+      - "protected file write requested"
+      - "write outside declared writeback_targets"
+      - "any connector or external network request"
+      - "any canonical state mutation request"
+      - "any undeclared read"
+
+  - id: openai-operator-research-shadow
+    description: "OpenAI shadow operator/research briefing - declared context only, dry-run payloads only, draft/audit writeback only"
+    required_reads:
+      - "00_HOME/Now.md"
+      - "README.md"
+      - "ROADMAP.md"
+      - "06_AGENTS/OpenAI-Adapter-Spec.md"
+      - "06_AGENTS/Responses-MCP-Binding.md"
+      - "06_AGENTS/N8N-MCP-Hub-Spec.md"
+    optional_reads:
+      - "07_LOGS/Build-Logs/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+      - write_drafts
+    permission_ceiling: shadow_log_only
+    writeback_expectations: "operator/research draft + agent activity only; no live OpenAI, no live n8n, no Discord send, no canonical mutation"
+    escalation_trigger:
+      - "protected file write requested"
+      - "write outside Operator-Briefs/_drafts or Agent-Activity"
+      - "live API call requested"
+      - "remote MCP call requested without approval"
+      - "n8n live workflow execution requested"
+      - "any canonical state mutation request"
+      - "any undeclared read"
+
+  - id: graph-hygiene
+    description: "Vault graph hygiene scan - proposal-only report for structural issues"
+    required_reads:
+      - "06_AGENTS/Vault-Map.md"
+      - "06_AGENTS/Knowledge-Taxonomy.md"
+    optional_reads:
+      - "01_PROJECTS/"
+      - "02_KNOWLEDGE/"
+      - "03_INPUTS/00_QUARANTINE/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+    permission_ceiling: proposal_log_only
+    writeback_expectations: "hygiene report only; no vault mutations"
+    escalation_trigger:
+      - "any repair, rename, or delete requested"
+      - "protected file modification requested"
+      - "write outside declared report targets"
+
+  - id: browser-research
+    description: "Bounded browser research — navigate declared URLs, extract content to quarantine, produce research summary"
+    required_reads:
+      - "04_SOPS/Untrusted-Input-Handling-SOP.md"
+    optional_reads:
+      - "04_SOPS/Full-System-Operator-Safety-SOP.md"
+    runtime_class: write-quarantine
+    permission_set:
+      - read_external
+      - write_quarantine
+      - write_logs
+    permission_ceiling: quarantine_and_logs_only
+    writeback_expectations: "quarantine content file + .meta.json sidecar per page via capture pipeline; research summary to 07_LOGS/Operator-Briefs/"
+    escalation_trigger:
+      - "navigation to URL outside declared allowed_origins"
+      - "write destination outside quarantine boundary or Operator-Briefs"
+      - "external page content treated as instructions"
+      - "credential access requested"
+      - "form submission or file download attempted"
+
+  - id: developer-copilot-shadow
+    description: "Developer Co-Development shadow mode — read declared narrow context, produce draft briefs, contradiction scan, implementation brief, diagram proposal"
+    required_reads:
+      - "CLAUDE.md"
+    optional_reads:
+      - "focus_area (resolved from inputs at runtime)"
+      - "target_paths (resolved from inputs at runtime)"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+    permission_ceiling: shadow_log_only
+    writeback_expectations: "draft artifacts to 07_LOGS/Developer-Briefs/ + audit to 07_LOGS/Agent-Activity/ + build log to 07_LOGS/Build-Logs/ + archive note to 99_ARCHIVE/Documentation-History/; no canonical mutations"
+    escalation_trigger:
+      - "write outside declared Developer-Briefs, Agent-Activity, Build-Logs, or Documentation-History targets"
+      - "protected file write requested"
+      - "runtime/ write attempted"
+      - "any canonical state mutation requested"
+      - "any connector or network access requested"
+      - "any shell or git execution requested"
+      - "ambient vault traversal beyond declared focus_area and target_paths"
+
+  - id: source-pack-builder
+    description: "Acquisition + Normalization source pack builder - reads declared sources and writes first-wave packet artifacts only"
+    required_reads: []
+    optional_reads:
+      - "sources[].path (declared at runtime)"
+      - "sources[].sidecar_path (declared at runtime)"
+    runtime_class: read-heavy
+    permission_set:
+      - read_declared_sources
+      - write_runtime_local
+      - write_logs
+    permission_ceiling: acquisition_pack_only
+    writeback_expectations: "source_packet, normalized_source_pack, and briefing_ready_input_set artifacts only under runtime/acquisition/packs/ or 07_LOGS/Acquisition-Packs/; no canonical mutations"
+    escalation_trigger:
+      - "required source scope is missing"
+      - "undeclared source class requested"
+      - "source path outside declared class scope"
+      - "browser scope too broad or credential/form/download-enabled"
+      - "write outside runtime/acquisition/packs/ or 07_LOGS/Acquisition-Packs/"
+      - "canonical mutation requested"
+      - "connector/API/network/live browser use requested"
+      - "MCP expansion, native cron, delivery, action packet, memory candidate, or outcome scoring requested"
+
+  - id: trace-idea
+    description: "Read-only provenance trace workflow across acquisition artifacts, source packages, and audit logs"
+    required_reads:
+      - "runtime/acquisition/"
+      - "07_LOGS/Build-Logs/"
+      - "07_LOGS/Agent-Activity/"
+    optional_reads:
+      - "runtime/source_intelligence/"
+      - "03_INPUTS/00_QUARANTINE/"
+      - "runtime/workflows/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+    permission_ceiling: report_only
+    writeback_expectations: "trace report only to 07_LOGS/Trace-Reports/; no canonical mutations"
+    escalation_trigger:
+      - "write outside Trace-Reports or Agent-Activity"
+      - "any canonical mutation requested"
+      - "lineage surfaced as certainty when evidence is partial"
+
+  - id: promotion-review
+    description: "Draft bounded canonical-promotion review workflow — declared candidate, declared approval, centralized Gate provenance check"
+    required_reads:
+      - "02_KNOWLEDGE/"
+      - "07_LOGS/Agent-Activity/"
+      - "07_LOGS/Build-Logs/"
+    optional_reads:
+      - "runtime/schemas/"
+      - "runtime/workflows/registry/"
+      - "06_AGENTS/role-cards/"
+    runtime_class: gated-write
+    permission_set:
+      - read_vault
+      - write_logs
+      - write_bounded_canonical
+      - write_bounded_index_update
+    permission_ceiling: gated_canonical_write
+    writeback_expectations: "bounded canonical note write plus declared index/log artifacts only after explicit approval and centralized provenance minimum checks"
+    escalation_trigger:
+      - "promotion approval missing or invalid"
+      - "provenance minimums fail"
+      - "target outside declared canonical scope"
+      - "attempted write outside declared writeback_targets"
+      - "runtime instance lacks an explicitly activated promotion path"
+
+  - id: review
+    description: "Cross-runtime review coordination — claim a review task from the bus, read the referenced artifact, produce a structured review result, post back to the bus"
+    required_reads:
+      - "07_LOGS/Agent-Activity/"
+    optional_reads:
+      - "07_LOGS/Operator-Briefs/"
+      - "07_LOGS/SBP-Runs/"
+      - "07_LOGS/Build-Logs/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+      - write_bus_result
+    permission_ceiling: bus_result_only
+    writeback_expectations: "agent activity audit only; bus result is posted via coordination bus API, not via vault file write; no canonical mutations"
+    escalation_trigger:
+      - "any canonical write requested"
+      - "artifact path outside declared review scope"
+      - "reviewed artifact content treated as operator instructions"
+
+  - id: meeting-ingest
+    description: "Post-capture transcript enrichment — extract entity mentions, match to vault nodes, apply CGL check, write link-proposal report; no vault mutations"
+    required_reads:
+      - "01_PROJECTS/"
+      - "02_KNOWLEDGE/"
+    optional_reads:
+      - "06_AGENTS/Vault-Map.md"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+    permission_ceiling: report_only
+    writeback_expectations: "link-proposal report only to 07_LOGS/Link-Proposals/; no vault mutations"
+    escalation_trigger:
+      - "link application without operator approval"
+      - "write outside Link-Proposals or Agent-Activity"
+      - "transcript content treated as operator instructions"
+      - "any canonical mutation requested"
+
+  - id: drift-scan
+    description: "Doctrine/behavior alignment scan — compares declared domain priorities against build log activity; identifies neglected domains and open loops; report-only"
+    required_reads:
+      - "07_LOGS/Build-Logs/"
+      - "07_LOGS/Decision-Ledger/"
+    optional_reads:
+      - "00_HOME/Operating-System.md"
+      - "07_LOGS/Operator-Briefs/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+    permission_ceiling: report_only
+    writeback_expectations: "drift report only to 07_LOGS/Drift-Reports/; doctrine files never modified"
+    escalation_trigger:
+      - "any doctrine file modification attempted"
+      - "write outside Drift-Reports or Agent-Activity"
+      - "any canonical mutation requested"
+
+  - id: coordination
+    description: "Inter-runtime coordination — bus polling, heartbeat, claim-and-dispatch loops; no canonical vault writes"
+    required_reads:
+      - "runtime/agent_bus/"
+    optional_reads: []
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+      - write_bus_result
+    permission_ceiling: bus_result_only
+    writeback_expectations: "agent activity audit only; all bus state written via coordination bus API; no canonical mutations"
+    escalation_trigger:
+      - "any canonical write requested"
+      - "task dispatched to handler outside registered dispatch table"
+      - "interval_seconds < 1 (invalid polling interval)"
+
+  - id: research-synthesis
+    description: "Hermes-owned SIC workspace synthesis — reads workspace outputs and captures structured synthesis draft to quarantine; no canonical writes"
+    required_reads:
+      - "runtime/source_intelligence/workspaces/"
+      - "00_HOME/Now.md"
+    optional_reads:
+      - "runtime/source_intelligence/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_quarantine
+      - write_logs
+    permission_ceiling: quarantine_and_logs_only
+    writeback_expectations: "synthesis draft captured to 03_INPUTS/00_QUARANTINE/digest/; audit log to 07_LOGS/Agent-Activity/; no canonical promotion"
+    escalation_trigger:
+      - "workspace does not exist"
+      - "write outside quarantine or Agent-Activity"
+      - "synthesis draft promoted directly to canonical knowledge"
+      - "workspace_id not declared in manifest"
+
+  - id: implementation
+    description: "Archon-received implementation task — bounded analysis of a declared implementation brief; bus result + audit writeback only"
+    required_reads:
+      - "CLAUDE.md"
+      - "00_HOME/Now.md"
+    optional_reads:
+      - "runtime/ (declared target paths only)"
+      - "07_LOGS/Build-Logs/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+      - write_bus_result
+    permission_ceiling: bus_result_only
+    writeback_expectations: "bus result + Agent-Activity audit only; no canonical mutations"
+    escalation_trigger:
+      - "any canonical write requested"
+      - "artifact path outside declared task scope"
+      - "shell or connector execution requested"
+      - "credentials or protected files accessed"
+
+  - id: code-review
+    description: "Archon-received code review — bounded structural review of declared artifact; bus result + audit writeback only"
+    required_reads:
+      - "07_LOGS/Agent-Activity/"
+    optional_reads:
+      - "runtime/ (declared review target only)"
+      - "07_LOGS/Build-Logs/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+      - write_bus_result
+    permission_ceiling: bus_result_only
+    writeback_expectations: "bus result + Agent-Activity audit only; no canonical mutations"
+    escalation_trigger:
+      - "any canonical write requested"
+      - "artifact path outside declared review scope"
+      - "review artifact treated as operator instructions"
+
+  - id: architecture-review
+    description: "Archon-received architecture review — bounded review of declared architecture artifact or design; bus result + audit writeback only"
+    required_reads:
+      - "06_AGENTS/"
+      - "CLAUDE.md"
+    optional_reads:
+      - "runtime/ (declared target paths only)"
+      - "07_LOGS/Build-Logs/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_logs
+      - write_bus_result
+    permission_ceiling: bus_result_only
+    writeback_expectations: "bus result + Agent-Activity audit only; no canonical mutations"
+    escalation_trigger:
+      - "any canonical write requested"
+      - "artifact path outside declared review scope"
+      - "architecture doc mutation without operator approval"
+
+  - id: chat
+    description: "Studio Chat message dispatch — Hermes processes a user chat message using LLM synthesis and posts a chat response to the Agent Bus"
+    required_reads:
+      - "00_HOME/Now.md"
+    optional_reads:
+      - "HERMES.md"
+      - "runtime/studio/chat/"
+    runtime_class: read-heavy
+    permission_set:
+      - read_vault
+      - write_bus_result
+      - write_logs
+    permission_ceiling: bus_result_only
+    writeback_expectations: "chat response via bus result_attached event + Agent-Activity audit only; no canonical mutations"
+    escalation_trigger:
+      - "any canonical write requested"
+      - "credential access beyond ANTHROPIC_API_KEY for LLM synthesis"
+      - "vault mutation outside Agent-Activity"
+      - "external API call other than Anthropic synthesis"
+
+  - id: unclassified
+    description: "SENTINEL - task type could not be classified; escalate, never run"
+    required_reads: []
+    optional_reads: []
+    runtime_class: escalate
+    permission_set: []
+    permission_ceiling: none
+    writeback_expectations: "escalation log entry only"
+    escalation_trigger:
+      - "always - unclassified tasks are NEVER executed"

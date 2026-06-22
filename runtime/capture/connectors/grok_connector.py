@@ -80,7 +80,7 @@ PROVENANCE FIELDS:
         response_id         — xAI response ID if present
         usage               — token usage dict if returned (prompt/completion/total)
         finish_reason       — finish reason from the first choice if present
-        capture_method_detail — 'xai-grok-api-chat-completions'
+        capture_method_detail — 'grok-api-chat-completions'
 
     NOT stored anywhere:
         - API key
@@ -382,7 +382,7 @@ def capture_from_grok(
         "response_id":           response_id,
         "usage":                 usage,
         "finish_reason":         finish_reason,
-        "capture_method_detail": "xai-grok-api-chat-completions",
+        "capture_method_detail": "grok-api-chat-completions",
     }
 
     return ContentPacket(

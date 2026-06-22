@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chaseos.local/schemas/subagent-preset.schema.json",
+  "title": "ChaseOS Sub-Agent Preset",
+  "type": "object",
+  "required": [
+    "id",
+    "version",
+    "name",
+    "description",
+    "role",
+    "runtimePreferences",
+    "modes",
+    "activation",
+    "tools",
+    "memory",
+    "compute",
+    "lifecycle",
+    "output"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "version": { "type": ["string", "integer"] },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "role": { "type": "string" },
+    "runtimePreferences": {
+      "type": "array",
+      "items": { "enum": ["OpenHuman", "HermesAgent", "OpenClaw"] }
+    },
+    "modes": {
+      "type": "array",
+      "items": { "enum": ["server", "workspace", "mission"] }
+    },
+    "activation": {
+      "type": "object",
+      "properties": {
+        "triggers": { "type": "array", "items": { "type": "string" } },
+        "manualInvocationEnabled": { "type": "boolean" },
+        "autoActivationEnabled": { "type": "boolean" },
+        "approvalRequiredForActivation": { "type": "boolean" },
+        "spawnLimit": { "type": "integer", "minimum": 1, "maximum": 16 }
+      }
+    },
+    "tools": {
+      "type": "object",
+      "properties": {
+        "allowed": { "type": "array", "items": { "type": "string" } },
+        "denied": { "type": "array", "items": { "type": "string" } },
+        "requiresApproval": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "properties": {
+        "read": { "type": "array", "items": { "type": "string" } },
+        "write": { "type": "array", "items": { "type": "string" } },
+        "denied": { "type": "array", "items": { "type": "string" } },
+        "summarizeBeforePersist": { "type": "boolean" }
+      }
+    },
+    "compute": {
+      "type": "object",
+      "properties": {
+        "maxTokens": { "type": "integer", "minimum": 1 },
+        "maxRuntimeMs": { "type": "integer", "minimum": 1000 },
+        "maxParallelWorkers": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "maxRetries": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "maxIterations": { "type": "integer", "minimum": 1 },
+        "maxToolCalls": { "type": "integer", "minimum": 0 },
+        "priority": { "type": "string" },
+        "allowContinuation": { "type": "boolean" }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "properties": {
+        "ttlMs": { "type": "integer", "minimum": 1000 },
+        "checkpointIntervalMs": { "type": "integer", "minimum": 1000 },
+        "maxCheckpoints": { "type": "integer", "minimum": 0 },
+        "persistFinalSummary": { "type": "boolean" },
+        "cleanupStrategy": {
+          "enum": ["discard_context", "persist_summary_only", "persist_reviewable_artifacts"]
+        },
+        "retainArtifacts": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "format": { "enum": ["structured_markdown", "json", "diff", "report", "artifact_bundle"] },
+        "requiredSections": { "type": "array", "items": { "type": "string" } },
+        "artifactTypes": { "type": "array", "items": { "type": "string" } },
+        "schemaRef": { "type": "string" }
+      }
+    }
+  }
+}

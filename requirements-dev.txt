@@ -1,0 +1,4 @@
+# ChaseOS Core — development / test dependencies (mirrors the pyproject `dev` extra).
+pytest>=9.0.0
+pytest-cov>=7.0.0
+PyYAML>=6.0.0
