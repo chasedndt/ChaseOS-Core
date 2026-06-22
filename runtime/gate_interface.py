@@ -23,6 +23,7 @@ module is import-clean for Core.
 
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 from typing import Any, Optional, Protocol, runtime_checkable
 
 
@@ -176,3 +177,80 @@ def check_coordination_path(
 
 def get_runtime_operation_approval_schema(operation: str, **kwargs: Any) -> Optional[dict]:
     return get_gate().get_runtime_operation_approval_schema(operation, **kwargs)
+
+
+# ── ApprovalGateway port (ADR-0014) ──────────────────────────────────────────────
+# Core defines the approval contract; the proprietary StudioService implements it.
+# Core-MIT modules (e.g. runtime/chaser) depend on this port — NOT on runtime.studio
+# — so they import cleanly with no proprietary dependency. The resolver lazily binds
+# the real StudioService when present, and fails closed (deny) when it is absent.
+
+
+@dataclass
+class ActionSpec:
+    """Specification for a gated write/action routed through the ApprovalGateway.
+
+    Field-compatible with the Studio implementation so it serializes identically;
+    Core defines the contract, Studio (proprietary) consumes/validates it.
+    """
+
+    action_type: str  # e.g. "create_file" | "write_file" | "delete_file" | "promote_quarantine" | "execute_process"
+    target_path: str  # relative vault path
+    content: Optional[str] = None
+    metadata: dict = field(default_factory=dict)
+    submitted_by: str = "core"
+    note: str = ""
+
+    def is_delete(self) -> bool:
+        return self.action_type == "delete_file"
+
+    def is_promote(self) -> bool:
+        return self.action_type == "promote_quarantine"
+
+
+class ApprovalGatewayError(RuntimeError):
+    """Raised when no approval gateway is available to satisfy a gated action."""
+
+
+@runtime_checkable
+class ApprovalGateway(Protocol):
+    """Approval backend contract: queue a gated action and read its approval record."""
+
+    def queue_for_approval(self, spec: "ActionSpec") -> Any: ...
+
+    def get_approval(self, approval_id: str) -> Optional[Any]: ...
+
+    def list_pending(self) -> list: ...
+
+
+class _DenyApprovalGateway:
+    """Fail-closed fallback when no approval backend is present (e.g. ChaseOS Core).
+
+    Reads return empty (no records); attempts to queue raise — Core has no approval
+    store, so a gated action cannot be requested without a backend.
+    """
+
+    def queue_for_approval(self, spec: "ActionSpec") -> Any:
+        raise ApprovalGatewayError(
+            "no approval gateway available in this edition (gated action cannot be queued)"
+        )
+
+    def get_approval(self, approval_id: str) -> Optional[Any]:
+        return None
+
+    def list_pending(self) -> list:
+        return []
+
+
+def get_approval_gateway(vault_root: Any, *, dry_run: bool = False) -> ApprovalGateway:
+    """Return the approval backend for ``vault_root``.
+
+    Binds the proprietary StudioService when it is importable (full monorepo); returns
+    a fail-closed deny gateway when it is not (MIT Core / Chaser slice).
+    """
+
+    try:
+        from runtime.studio.service import StudioService
+    except ImportError:
+        return _DenyApprovalGateway()
+    return StudioService(vault_root, dry_run=dry_run)
