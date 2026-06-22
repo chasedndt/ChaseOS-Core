@@ -1,8 +1,10 @@
 # ChaseOS Core — runtime dependencies
 #
-# ChaseOS Core is STDLIB-ONLY: there are NO required third-party runtime dependencies.
-# `pyproject.toml` is the dependency source of truth (PEP 621). This file exists for
-# tooling/conventions that expect a requirements.txt.
+# ChaseOS Core is near-stdlib: the ONLY required third-party runtime dependency is a
+# YAML parser (workflow manifests, role cards, task-type table, schedules, and context
+# boot are YAML). `pyproject.toml` is the dependency source of truth (PEP 621); this file
+# mirrors it for tooling/conventions that expect a requirements.txt.
+PyYAML>=6.0.0
 #
 # Optional capabilities (install via extras instead of pinning here):
 #   pip install -e .[browser]   # live browser operation; then: playwright install chromium

@@ -6,7 +6,16 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
-from runtime.agent_bus.capabilities import load_all_capabilities
+try:
+    from runtime.agent_bus.capabilities import load_all_capabilities
+except ImportError:  # MIT Core edition: the agent_bus coordination layer is not shipped.
+    def load_all_capabilities(_root):  # type: ignore[misc]
+        """Fallback when the coordination layer is absent (e.g. ChaseOS Core).
+
+        Routing then resolves to local-only availability via the defensive
+        fallback in ``build_runtime_availability``.
+        """
+        raise RuntimeError("agent_bus coordination layer is not available in this edition")
 
 from .models import (
     RETIRED_RUNTIME_BACKENDS,

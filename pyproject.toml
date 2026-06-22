@@ -7,14 +7,17 @@ name = "chaseos-core"
 version = "0.1.0"
 description = "ChaseOS Core — privacy-first, local-first agentic OS framework (MIT)"
 requires-python = ">=3.11"
-# Core is stdlib-only. Optional capabilities live behind extras.
-dependencies = []
+# Core is near-stdlib: the only required runtime dependency is a YAML parser
+# (workflow manifests, role cards, task-type table, schedules, context boot are YAML).
+# All other capabilities live behind extras.
+dependencies = [
+    "PyYAML>=6.0.0",
+]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=9.0.0",
     "pytest-cov>=7.0.0",
-    "PyYAML>=6.0.0",
 ]
 browser = [
     # Bounded browser/operator surface (runtime/operator_surface/*). Runs in STUB mode

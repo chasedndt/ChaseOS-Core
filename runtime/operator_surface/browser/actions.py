@@ -424,7 +424,7 @@ def snapshot_interactive(page: Any, max_elements: int = 50) -> ActionResult:
                   el.value ||
                   el.textContent ||
                   ''
-                ).trim().replace(/\s+/g, ' ').slice(0, 160);
+                ).trim().replace(/\\s+/g, ' ').slice(0, 160);
                 visible.push({
                   index: idx,
                   role,
