@@ -111,4 +111,3 @@ Thumbs.db
 #     event spools, and per-pass state — must never be committed) ---
 .gr/
 NUL
-CORE_EXPORT_STATUS.json
