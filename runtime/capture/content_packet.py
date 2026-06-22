@@ -121,7 +121,7 @@ class ContentPacket:
         original_name:    Original filename or resource name at source.
                           E.g., "transcript.txt", "lecture-4.pdf".
         original_path_or_uri: Full path or URI to the original resource.
-                          E.g., "/home/user/downloads/transcript.txt" or a URL.
+                          E.g., "/path/to/downloads/transcript.txt" or a URL.
         detected_mime:    MIME type of the source content.
                           Defaults to "text/plain; charset=utf-8".
         workspace_hint:   Optional SIC workspace name for future ingestion.
@@ -132,7 +132,7 @@ class ContentPacket:
                           E.g., "trading-systems", "ai-engineering", "cybersecurity".
                           Not authoritative — a hint for later SIC workspace grouping.
         project_hint:     Which active project this content might connect to.
-                          E.g., "chaseos", "tradesync", "strikezone".
+                          E.g., "project-a", "project-b".
                           Not authoritative — a hint for later project linking.
         topic_hint:       Loose subject label within the domain.
                           E.g., "market-microstructure", "semantic-routing".

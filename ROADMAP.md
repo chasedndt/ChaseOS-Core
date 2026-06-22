@@ -1,40 +1,25 @@
-# ROADMAP — ChaseOS Core
+# ChaseOS Core Roadmap
 
-A public, honest roadmap for the MIT Core. Capabilities are marked **live** only with
-evidence. Nothing here implies a hosted service, public installer, billing, managed
-agents, or a marketplace are live.
+This roadmap tracks public framework capabilities. Private implementation milestones, local runtime state, and deployment-specific approvals belong outside Core.
 
-## Now — v0 (shipped in this repo)
+## Complete Enough For Core
 
-- **Runtime substrate** (stdlib-first, zero required deps): Agent Bus + pluggable
-  storage backend; native Schedule Intent layer; `net` (SSRF guard); `security`
-  (injection scan / redaction / prompt guard); `context` (boot protocol); `lifecycle`
-  (local descriptors); `platform_support`; `execution_adapters/model_config`; `common`;
-  `adapters` (codex / n8n / openai).
-- **Framework + instance scaffold**: governance contracts, templates, synthetic
-  examples, getting-started, concepts, and CLI / agent / runtime / workflow / governance
-  docs.
-- **Forker protections**: instance-aware `.gitignore`, Core-vs-Personal separation,
-  `SBOM.md` (zero required runtime deps).
+- Framework foundation and governance vocabulary.
+- Core folder model and public templates.
+- Agent boundary documentation.
+- Approval-first writeback model.
+- Export safety checks and curated template mode.
 
-## Next — Core growth (engineering)
+## Planned Core Work
 
-- **Migrate deferred runtime modules into Core** as their proprietary coupling is
-  broken, ordered and import-verified: `providers` → `execute` → `siteops` → `events`;
-  then `aor`, `mcp`, `memory`, `workflows`, `source_intelligence`, `capture` as their
-  carve-outs land.
-- **Machine-readable SBOM** (`SBOM.spdx.json`) + a **compatibility / import-clean test
-  suite** wired into CI.
-- **Developer surface**: a versioned SDK and published schema packages.
+- Broader example packs for projects, knowledge notes, operator runs, and runtime profiles.
+- Additional schema examples for approval packets and evidence records.
+- Public onboarding guide for private deployments.
+- Compatibility notes for Markdown-first tools.
 
-## Boundaries — not live
+## Deferred From Core
 
-- No public installer, hosted runtime, managed agents, billing, credits, or marketplace.
-- ChaseOS Studio and ChaseOS Cloud are separate **proprietary** products with their own
-  release tracks; this roadmap covers the MIT Core only.
-
-## How Core grows
-
-A module enters Core only when it is **import-clean** (no compile-time dependency on the
-proprietary layers), **secret-clean**, and reviewed. The method, allowlist, and the
-ordered remaining breaks are recorded in `EXTRACTION_MANIFEST.md`.
+- Private operator schedules.
+- Live provider or connector configuration.
+- Host startup or installer mutation.
+- Personal memory, project state, and runtime history.

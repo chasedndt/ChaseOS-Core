@@ -1,0 +1,13 @@
+id: default-workspace-team
+name: Default Workspace Team
+mode: workspace
+presets:
+  - ceo-orchestrator
+  - research-worker
+  - engineering-worker
+  - qa-testing-worker
+  - memory-documentation-worker
+coordination:
+  lead: ceo-orchestrator
+  maxParallelWorkers: 3
+  approvalRequiredForExternalEffects: true

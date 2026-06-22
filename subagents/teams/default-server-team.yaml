@@ -1,0 +1,10 @@
+id: default-server-team
+name: Default Server Team
+mode: server
+presets:
+  - ceo-orchestrator
+  - memory-documentation-worker
+coordination:
+  lead: ceo-orchestrator
+  maxParallelWorkers: 2
+  approvalRequiredForExternalEffects: true

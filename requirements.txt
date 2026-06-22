@@ -1,0 +1,10 @@
+# ChaseOS Core — runtime dependencies
+#
+# ChaseOS Core is STDLIB-ONLY: there are NO required third-party runtime dependencies.
+# `pyproject.toml` is the dependency source of truth (PEP 621). This file exists for
+# tooling/conventions that expect a requirements.txt.
+#
+# Optional capabilities (install via extras instead of pinning here):
+#   pip install -e .[browser]   # live browser operation; then: playwright install chromium
+#   pip install -e .[voice]     # on-device STT/TTS (faster-whisper, piper-tts, sounddevice, numpy)
+#   pip install -e .[dev]       # test tooling (see requirements-dev.txt)

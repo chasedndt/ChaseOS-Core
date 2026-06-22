@@ -1,0 +1,12 @@
+{
+  "flags_version": "0.1.0",
+  "note": "Feature flags = is a capability technically enabled for this rollout/cohort? (distinct from entitlements = is the account commercially permitted?). The app gate requires BOTH. All commerce flags ship OFF until their surface is built + verified.",
+  "flags": {
+    "commerce.catalogue_surface": { "enabled": false, "cohorts": "all", "description": "Render plans/prices from the catalogue in Studio/website." },
+    "commerce.insights_basic": { "enabled": false, "cohorts": "all", "description": "Free basic token/cost Insights panel." },
+    "commerce.insights_advanced_beta": { "enabled": false, "cohorts": [], "description": "Advanced Insights (also entitlement-gated)." },
+    "commerce.plan_status_surface": { "enabled": false, "cohorts": "all", "description": "Studio plan-status surface." },
+    "commerce.billing_testmode": { "enabled": false, "cohorts": [], "description": "Stripe test-mode billing (never live keys)." },
+    "commerce.connect_panel": { "enabled": false, "cohorts": "all", "description": "Connect Providers & Tools panel scaffold." }
+  }
+}
