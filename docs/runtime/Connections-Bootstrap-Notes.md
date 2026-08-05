@@ -1,9 +1,11 @@
-# ChaseOS Current Architecture Map — Connections Bootstrap
+# Connections Bootstrap — Engineering Notes
 
 **Date:** 2026-06-26  
 **Scope:** ChaseOS Core repository inspection for the Connections + channel colleague architecture handover.  
-**Repository inspected:** `<local-path-to-your-chaseos-core-fork>`  
 **Status:** Phase 0 discovery plus a minimal Core-safe Connections registry foothold.
+
+> This is a point-in-time engineering handover note, kept for build history. For the
+> current, curated picture, see [`docs/ARCHITECTURE.md`](../ARCHITECTURE.md).
 
 ## Repository identity
 

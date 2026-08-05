@@ -10,6 +10,41 @@ ChaseOS Core is a public framework. Do not report or publish private instance se
 - Public/private Core export scanning.
 - Credential exclusion by default.
 
-## Reporting
+## Supported Versions
 
-When reporting a vulnerability, include the affected public Core contract, reproduction steps using non-private fixtures, and the expected safety behavior. Do not include real credentials or private vault contents.
+Core is pre-1.0 and alpha. Security fixes are applied to `main`; there are no maintained
+backport branches yet.
+
+| Version | Supported |
+|---|---|
+| `main` | Yes |
+| `0.1.x` tags | Best effort |
+
+## Reporting a Vulnerability
+
+**Do not open a public GitHub issue for security reports.**
+
+Use GitHub's private vulnerability reporting for this repository
+([Security → Report a vulnerability](https://github.com/chasedndt/ChaseOS-Core/security/advisories/new)),
+which keeps the report confidential until a fix is available.
+
+When reporting, include:
+
+- the affected public Core contract or module;
+- reproduction steps using non-private fixtures only;
+- the expected safety behavior versus what actually happened;
+- impact assessment (what authority boundary is crossed).
+
+Do not include real credentials, tokens, or private vault contents in a report.
+
+### What to expect
+
+- **Acknowledgement:** within 5 business days.
+- **Initial assessment:** within 10 business days.
+- **Disclosure:** coordinated once a fix is available. Reporters are credited in the
+  advisory unless they ask otherwise.
+
+Because Core is a framework rather than a hosted service, findings that depend entirely on a
+private deployment's own configuration (credentials, provider bindings, local policy) are
+usually deployment issues rather than Core vulnerabilities — but report them anyway if a
+Core default made the unsafe configuration likely.

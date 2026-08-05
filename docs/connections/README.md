@@ -38,4 +38,6 @@ python -m runtime.cli.core_main connections list --vault-root /path/to/vault --j
 python -m runtime.cli.core_main connections seed local_files --vault-root /path/to/vault --json
 ```
 
-See `docs/chase_os_current_architecture_map.md` for the Phase 0 discovery map and next build order.
+See [`docs/ARCHITECTURE.md`](../ARCHITECTURE.md) for the current architecture map, and
+[`docs/runtime/Connections-Bootstrap-Notes.md`](../runtime/Connections-Bootstrap-Notes.md)
+for the Phase 0 discovery notes and next build order.

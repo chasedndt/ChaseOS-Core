@@ -1,8 +1,43 @@
 # ChaseOS Core
 
+[![tests](https://github.com/chasedndt/ChaseOS-Core/actions/workflows/tests.yml/badge.svg)](https://github.com/chasedndt/ChaseOS-Core/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![Status: Alpha](https://img.shields.io/badge/status-alpha-orange.svg)](ROADMAP.md)
+
 ChaseOS Core is an MIT-licensed, local-first framework for building governed hybrid-intelligence operating systems. It gives fork owners a safe scaffold for memory, projects, source intake, runtime boundaries, approval-gated automation, agent coordination, and evidence-first writeback across humans, deterministic software, ML, and generative agents.
 
 Core is the public framework layer. Your private identity, projects, logs, credentials, provider state, and live runtime memory belong in a separate private ChaseOS instance.
+
+## Why ChaseOS Core
+
+Most agent frameworks optimize for capability. Core optimizes for **authority** — what an
+automated system is *allowed* to do, who is accountable for it, and what evidence exists
+afterward. That shows up as three concrete defaults:
+
+- **Fail-closed, not fail-open.** Adapters without a bound backend deny rather than proceed.
+  Provider connections start `read_only`; writes and external egress are approval-gated.
+- **Modality before provider.** The Autonomous Operator Runtime decides whether a step
+  belongs to a human, deterministic code, an ML model, or a generative agent *before* it
+  picks a runtime — and can derive the approval plan without executing anything.
+- **Truth is promoted, not written.** Captures land in quarantine; canonical knowledge is
+  reached through an explicit review gate, not direct agent writeback.
+
+If you're evaluating the design, start with [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+## Documentation
+
+| Doc | What it covers |
+|---|---|
+| [Architecture](docs/ARCHITECTURE.md) | Layer model, module map, decision-routing and connections flows (diagrams) |
+| [Quickstart](docs/getting-started/Quickstart.md) | Fork-first setup path |
+| [Core Operating Model](docs/concepts/Core-Operating-Model.md) | The seven canonical layers |
+| [Command Reference](docs/cli/Command-Reference.md) | Full CLI surface |
+| [Permission Matrix](kernel/PERMISSION_MATRIX.md) | Trust tiers and authority ceilings |
+| [Approval Center](docs/governance/Approval-Center.md) | Approval-gated write governance |
+| [FORKING.md](FORKING.md) | What to keep standard vs. customize in a fork |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Dev setup, scope rules, PR expectations |
+| [CHANGELOG.md](CHANGELOG.md) | Release history |
 
 ## What Works Today
 
@@ -107,6 +142,16 @@ print(format_repo_secret_audit(audit_repo_secrets('.')))
 PY
 ```
 
+## Contributing
+
+Contributions are welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for dev setup, scope
+rules (what belongs in Core versus a private instance), and PR expectations. This project
+follows the [Contributor Covenant](CODE_OF_CONDUCT.md).
+
+Security issues should not be filed as public issues — see [`SECURITY.md`](SECURITY.md).
+
 ## License
 
 ChaseOS Core is released under the MIT License. See [`LICENSE.md`](LICENSE.md).
+Third-party dependency notices are recorded in
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
