@@ -81,6 +81,10 @@ runtime/studio/chat/native-state/runtime-event-keys/
 # Security self-detection telemetry: gate-denial log + behavior-tripwire reports
 # (machine-local operational state, like Runtime-Events above).
 07_LOGS/Runtime-Audits/
+# Per-run AOR audit records written by `chaseos run` (workflow id, escalation
+# reasons, context-boot state). Generated runtime evidence, not source — without
+# this rule a fork commits its own operational logs on first workflow run.
+07_LOGS/Agent-Activity/
 # SQLite WAL/shm sidecars for the chat event store (extends *.sqlite above).
 *.sqlite-wal
 *.sqlite-shm

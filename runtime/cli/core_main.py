@@ -59,8 +59,19 @@ def cmd_doctor(args: argparse.Namespace) -> int:
             checks.append({"check": mod, "ok": True})
         except Exception as exc:  # noqa: BLE001
             checks.append({"check": mod, "ok": False, "error": str(exc)})
-    vault_ok = (vault / "00_HOME").exists() or (vault / ".chaseos").exists()
-    checks.append({"check": "vault_root", "ok": vault_ok, "path": str(vault)})
+    # Report which marker satisfied the check, not just a boolean: `.chaseos` can exist in
+    # a home directory that is not a vault, and a bare `ok` there reads as false confidence.
+    markers = [name for name in ("00_HOME", ".chaseos") if (vault / name).exists()]
+    vault_ok = bool(markers)
+    vault_check: dict[str, Any] = {"check": "vault_root", "ok": vault_ok, "path": str(vault)}
+    if vault_ok:
+        vault_check["matched"] = markers
+    else:
+        vault_check["error"] = (
+            f"no vault markers (00_HOME/ or .chaseos/) found in {vault}. "
+            "Pass --vault-root <path>, or run from your vault directory."
+        )
+    checks.append(vault_check)
     ok = all(c["ok"] for c in checks)
     if getattr(args, "output_json", False):
         print(json.dumps({"ok": ok, "action": "doctor", "result": {"checks": checks}, "errors": [], "warnings": []}, indent=2))

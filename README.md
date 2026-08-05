@@ -46,6 +46,7 @@ If you're evaluating the design, start with [`docs/ARCHITECTURE.md`](docs/ARCHIT
 | [Approval Center](docs/governance/Approval-Center.md) | Approval-gated write governance |
 | [FORKING.md](FORKING.md) | What to keep standard vs. customize in a fork |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Dev setup, scope rules, PR expectations |
+| [examples/](examples/) | Runnable scripts: use Core as a library in your own project |
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
 
 ## What Works Today
@@ -54,10 +55,10 @@ If you're evaluating the design, start with [`docs/ARCHITECTURE.md`](docs/ARCHIT
 |---|---|---|
 | Repository framework | Public folder structure, governance docs, templates, SOPs, runtime standards, and example files | Examples are scaffolds; private content is not included |
 | Lean Core CLI | `chaseos version`, `chaseos doctor`, `chaseos capture`, `chaseos schedule`, `chaseos run`, `chaseos connections`, `chaseos commerce` | The Core CLI is intentionally smaller than any private/proprietary operator CLI |
-| Health checks | `chaseos doctor --vault-root . --json` validates importable Core runtime blocks and the vault root shape | Does not validate private provider accounts or credentials |
+| Health checks | `chaseos doctor --vault-root . --json` validates importable Core runtime blocks and the vault root shape | Checks for vault markers (`00_HOME/`, `.chaseos/`) and reports which matched; it does not validate private provider accounts or credentials |
 | Capture intake | Explicit `file`, `stdin`, and optional local `image-text` capture into quarantine/intake paths | No ambient screen capture, browser-profile capture, cloud OCR, or canonical promotion by default |
 | Connections registry | Local-first provider manifest discovery plus SQLite registry initialization/seeding | Does not authenticate providers, fetch private data, or send messages by default |
-| Bounded workflow runner | `chaseos run <workflow_id> --dry-run` routes through the AOR/workflow substrate | Workflows remain bounded by manifests, role cards, and write scopes |
+| Bounded workflow runner | `chaseos run <workflow_id> --dry-run` routes through the AOR/workflow substrate | **Core ships no workflow manifests**, so this resolves to `escalated` rather than executing. Running real workflows requires supplying your own registry — see [ROADMAP.md](ROADMAP.md) |
 | Decision-route inspection | `chaseos decision-route inspect <contract.json> --json` deterministically checks human/rules/ML/genAI step selection and derives a decision-scoped approval plan | Inspection only: no dispatch, approval consumption, permission change, credential access, or canonical writeback |
 | Schedules | Native schedule-intent listing | Core does not ship private schedules or live operator queues |
 | Read-only commercial foundation | Catalog, entitlement, flags, admin overview, and ledger surfaces | Intended as product/marketplace scaffolding; not production billing by itself |
@@ -126,6 +127,35 @@ A healthy fork should:
 6. promote durable truth through an explicit review gate instead of direct agent writeback.
 
 ChaseOS Studio should be treated as an application layer over these Core contracts. Ship public contracts and reviewed source-safe docs in the repo; distribute packaged installers such as `.exe` files through release channels rather than normal source commits.
+
+## Use Core in your own project
+
+You do **not** have to fork Core to use its governance primitives. Install it as a
+dependency and import what you need — the modality router, the Gate port, and manifest
+loading all work as plain library calls with no vault directory:
+
+```bash
+pip install chaseos-core
+```
+
+```python
+from runtime.gate_interface import check_runtime_operation, register_gate
+
+# With no provider registered, Core denies by default — it never silently permits.
+allowed, reason = check_runtime_operation("vault.write")
+assert allowed is False
+
+class MyPolicy:
+    def check_runtime_operation(self, operation, **kwargs):
+        return operation.endswith(".read"), f"policy decision for {operation}"
+    # ... plus the remaining GateProvider methods
+
+register_gate(MyPolicy())
+```
+
+Runnable scripts for the three main entry points are in [`examples/`](examples/), and
+[`examples/README.md`](examples/README.md) documents which parts of Core need a vault root
+and which do not.
 
 ## Quickstart
 
