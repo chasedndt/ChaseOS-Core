@@ -115,3 +115,14 @@ Thumbs.db
 #     event spools, and per-pass state — must never be committed) ---
 .gr/
 NUL
+
+# --- Package-manager lockfiles ---
+# Core is a library, not an application. A committed lockfile pins exact
+# versions for THIS checkout, but pip ignores it when someone installs
+# chaseos-core, so it constrains contributors without protecting users — while
+# still needing `uv lock --upgrade` to stay current or it silently ages.
+# With a single runtime dependency (PyYAML) that upkeep buys almost nothing.
+# Resolution stays governed by the ranges in pyproject.toml.
+uv.lock
+poetry.lock
+pdm.lock
