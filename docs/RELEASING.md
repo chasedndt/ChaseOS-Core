@@ -46,9 +46,22 @@ Repeat on TestPyPI if you want to rehearse there first.
 
 ### 3. Create the GitHub environment
 
-In the repository: *Settings → Environments → New environment*, named `pypi`. Adding a
-required reviewer here means every publish needs a human approval click — recommended,
-since releases are effectively permanent.
+In the repository, go to **Settings**, then find **Environments** in the left sidebar under
+*Code and automation* (it is a sidebar entry, not a section of the main settings page):
+
+```
+https://github.com/chasedndt/ChaseOS-Core/settings/environments
+```
+
+Create one named `pypi` — the name must match `environment.name` in
+[`.github/workflows/publish.yml`](../.github/workflows/publish.yml) and the environment
+recorded on the PyPI publisher, or the OIDC exchange is rejected.
+
+Adding a required reviewer here means every publish needs a human approval click —
+recommended, since releases are effectively permanent.
+
+> Environments are free on public repositories. On private repos they require GitHub
+> Pro/Team, so this step behaves differently if the repo is ever made private.
 
 > **API tokens instead of Trusted Publishing.** If you prefer tokens, create one at
 > *PyPI → Account settings → API tokens*, store it as the `PYPI_API_TOKEN` repository
@@ -94,8 +107,14 @@ The extra index is needed because TestPyPI does not mirror real dependencies (Py
 - **Versions are immutable.** You can *yank* a released version (hiding it from new
   installs) but you can never re-upload the same version number. A mistake means shipping
   a new patch version.
-- **Names are permanent.** `chaseos-core` belongs to whoever registers it first. Register
-  it even if the first real release is later.
+- **A pending publisher does not reserve the name.** Configuring Trusted Publishing for a
+  project that does not exist yet lets that workflow *create* it, but PyPI says plainly that
+  until the first upload happens, anyone else may claim `chaseos-core` — including via their
+  own pending publisher. The name is only secured by publishing something. If the name
+  matters, ship a release (a pre-release such as `0.1.0rc1` counts) rather than sitting on
+  the configuration.
+- **Names are permanent once claimed**, and cannot be transferred away from the owning
+  account except through PyPI support.
 - **Pre-releases** (`0.2.0rc1`) are not installed by default, so they are a safe way to
   publish something for testing without affecting `pip install chaseos-core`.
 - Because Core is alpha and pre-1.0, treat any minor bump as potentially breaking and say
