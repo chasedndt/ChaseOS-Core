@@ -26,6 +26,12 @@ complete" means).
   that verifies packaged data files are present and usable outside the source tree.
 - `docs/RELEASING.md` and `.github/workflows/publish.yml` — PyPI publishing via Trusted
   Publishing, with the built wheel verified before upload.
+- `docs/concepts/` — an ordered entry path, a glossary, and concepts for authority/trust,
+  decision modality routing and multi-runtime coordination, plus a runtime topology diagram.
+- `runtime/memory/intelligence.py` — a deterministic, lexical memory-candidate harness
+  (scoring, near-duplicate detection, categorisation) with an evaluation fixture and tests.
+  Local-only by design: no provider calls, embeddings, memory mutation, canonical promotion
+  or network access.
 
 ### Fixed
 - **Packaging:** non-editable installs shipped no data files. `pip install chaseos-core`
