@@ -92,7 +92,6 @@ It validates the route and produces an approval plan naming the accountable huma
 These surfaces are present as Core-safe scaffolds or bounded footholds. Treat them as building blocks, not fully enabled production integrations:
 
 - provider manifests for Discord, Telegram, Slack, WhatsApp Business Cloud, WhatsApp personal lab, iMessage Mac, GitHub, and local files;
-- Studio product-surface contracts and launch references for apps built above Core;
 - adapter manifests and runtime profile examples for external agent runtimes;
 - acquisition/source-pack, graph, memory, subagent, OSRIL, operator-surface, and AOR modules;
 - optional browser and voice extras declared in `pyproject.toml`.
@@ -106,7 +105,6 @@ These surfaces are present as Core-safe scaffolds or bounded footholds. Treat th
 - Example folders that can be copied into a private deployment.
 - The lean MIT Core CLI entrypoint: `chaseos = runtime.cli.core_main:main`.
 - Local-first runtime modules for capture, schedules, connections, commerce scaffolding, AOR, Gate interfaces, graph/memory inspection, and bounded operator surfaces.
-- Studio product-surface contracts for the application layer built above Core.
 
 ## What This Repository Intentionally Does Not Contain
 
@@ -115,7 +113,7 @@ These surfaces are present as Core-safe scaffolds or bounded footholds. Treat th
 - Credential values, API keys, tokens, private keys, or provider secrets.
 - Provider-specific deployment state or authenticated account bindings.
 - Machine-local paths or operator-specific usernames.
-- Proprietary/private Studio builds or packaged installers.
+- Product-application source, builds, or packaged installers for anything built above Core.
 - Public write authority to canonical knowledge without review/promotion.
 
 ## Intended Use
@@ -131,7 +129,10 @@ A healthy fork should:
 5. run read-only/dry-run checks before enabling write, connector, browser, or publication actions;
 6. promote durable truth through an explicit review gate instead of direct agent writeback.
 
-ChaseOS Studio should be treated as an application layer over these Core contracts. Ship public contracts and reviewed source-safe docs in the repo; distribute packaged installers such as `.exe` files through release channels rather than normal source commits.
+An application built above Core — an operator UI, dashboard, or review surface — is a
+separate concern from the framework. Core documents the contracts such an application would
+consume; the application's own source, docs and installers belong with that product, not
+here.
 
 ## Works with your agent runtimes
 

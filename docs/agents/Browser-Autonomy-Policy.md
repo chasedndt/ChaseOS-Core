@@ -180,6 +180,6 @@ The correct next step is policy + registry + profile alignment first, then execu
 
 ---
 
-*Graph links: [[Browser-Operator-Surface]] · [[Browser-Operator-Surface-Operational-State]] · [[Browser-Watchlists-and-Evidence-Flow-Summary-Context-Application]] · [[Vault-Map]] · [[Hermes-Runtime-Profile]] · [[OpenClaw-Runtime-Profile]] · [[ChaseOS-Studio-Architecture]]*
+*Graph links: [[Browser-Operator-Surface]] · [[Browser-Operator-Surface-Operational-State]] · [[Browser-Watchlists-and-Evidence-Flow-Summary-Context-Application]] · [[Vault-Map]] · [[Hermes-Runtime-Profile]] · [[OpenClaw-Runtime-Profile]]*
 
 *Browser-Autonomy-Policy.md — v0.1 | Created: 2026-04-24 | Owner label: Optimus*

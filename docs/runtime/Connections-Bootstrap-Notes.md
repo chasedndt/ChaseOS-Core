@@ -19,7 +19,6 @@
 |---|---|---|
 | Lean Core CLI | `runtime/cli/core_main.py` | Argparse CLI for version, doctor, commerce, run, capture, schedule, and now Connections registry commands. |
 | AOR workflow runner | `runtime/aor/*` | Bounded workflow execution layer used by `chaseos run`. |
-| Hermes bridge | `runtime/hermes/chat_bridge.py` | Local Studio/Agent-Bus bridge into Hermes. It keeps provider credentials out of Studio and uses bounded subprocess/API handoff. |
 | MCP payload builder | `runtime/adapters/openai/responses_mcp_payload.py` | Dry-run Responses API remote-MCP payload builder; requires approval and blocks forbidden tool/data classes. |
 
 ## Existing services located
@@ -29,12 +28,6 @@
 - Public-safe Discord docs live under `docs/agents/Discord-Control-Plane.md`, `docs/agents/Discord-Command-Envelope-Schema.md`, `docs/agents/Discord-Channel-Registry.example.md`, and related templates.
 - The docs define Discord as an operator-facing transport, not canonical memory or approval authority.
 - In this Core repo, there is no live Discord bot token or deployment-specific channel binding. That matches Core's public-safe boundary.
-
-### Hermes runtime bridge
-
-- `runtime/hermes/chat_bridge.py` is the main Hermes-specific code surface located in Core.
-- It builds bounded prompts for Studio chat, reads local Hermes API key material from governed local paths, and avoids direct provider credential exposure in Studio.
-- Hermes remains a runtime adapter/control-plane bridge, not the Connections data-source registry itself.
 
 ### Memory and graph
 
@@ -117,7 +110,7 @@ The schema includes the handover's explicit v1 tables:
 1. No OAuth/device flow is implemented yet.
 2. No provider adapter invokes live APIs yet.
 3. No MCP client registry or tool invocation gateway exists yet.
-4. No Studio/Discord `/connections` UI surface is wired in Core; this pass is CLI/schema/package foothold only.
+4. No operator UI surface is wired in Core; this pass is CLI/schema/package foothold only.
 5. No source ingestion, embeddings, or temporal fact extraction is implemented in the new package yet.
 6. The temporal context graph described in the handover is not yet merged with the existing structural graph substrate.
 
@@ -125,7 +118,7 @@ The schema includes the handover's explicit v1 tables:
 
 1. Add connection event/audit append helpers around `tool_invocations` and connection lifecycle changes.
 2. Add local-files adapter in read-only mode using explicit allowlisted roots.
-3. Add a Studio/Discord read-only rendering surface for `connections list` and provider cards.
+3. Add a read-only rendering surface for `connections list` and provider cards.
 4. Add MCP Gateway registry with read-only tool filtering and approval-gated write tools.
 5. Add GitHub read-only connector using official MCP/GitHub App/PAT policy profile.
 6. Add per-channel `Channel Colleague` records only after namespace, retention, and source-leak guards are enforced.

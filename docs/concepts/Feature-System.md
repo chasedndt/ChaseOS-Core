@@ -5,7 +5,7 @@ ChaseOS features should be tracked as structured candidates before becoming prod
 ## Feature Records Should Include
 
 - Name and user outcome.
-- Core primitive or Studio surface touched.
+- Core primitive or product surface touched.
 - Authority required.
 - Data read/write boundaries.
 - Implementation owner or runtime lane.
@@ -14,4 +14,4 @@ ChaseOS features should be tracked as structured candidates before becoming prod
 
 ## Feature Fit
 
-Feature-fit review decides whether a proposal belongs in Core, Studio, a private instance, a workflow pack, or a future release.
+Feature-fit review decides whether a proposal belongs in Core, an application built above it, a private instance, a workflow pack, or a future release.

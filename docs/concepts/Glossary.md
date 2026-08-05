@@ -102,9 +102,6 @@ modality, its action classes, and a verifier. **(Core)**
 **Stakes** — A decision's risk band (`low`, `medium`, `high`, `critical`). High and critical
 stakes force approval. **(Core)**
 
-**Studio** — The proprietary application layer above Core, rendering Core's contracts as
-panels, approvals, and runtime views. Not part of this repository. *(instance)*
-
 **Tier (trust tier)** — The authority ceiling assigned to a runtime or adapter — how much it
 is permitted to do at most. See [Permission Matrix](../../kernel/PERMISSION_MATRIX.md).
 

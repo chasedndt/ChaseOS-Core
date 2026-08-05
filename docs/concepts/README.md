@@ -27,7 +27,7 @@ Core is the public framework. Your private identity, credentials, live runtime s
 real notes live in a **separate private instance** built on top of it. Core deliberately
 ships no secrets and no personal data, and it never gains them by being used.
 
-→ [Core vs Studio vs Instance](Core-vs-Studio-vs-Instance.md) · [FORKING.md](../../FORKING.md)
+→ [Core vs Instance](Core-vs-Instance.md) · [FORKING.md](../../FORKING.md)
 
 ### 2. The vault and its layers
 
@@ -121,7 +121,7 @@ You do **not** need these to start, and reading them early is the main reason Co
 heavy. Come back when you have a concrete reason:
 
 role cards · task-type tables · OSRIL · schedules · graph substrate · source intelligence ·
-capture connectors · commerce/entitlement surfaces · Studio panel contracts
+capture connectors · commerce/entitlement surfaces
 
 ## Where to go next
 

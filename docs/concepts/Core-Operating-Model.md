@@ -48,7 +48,7 @@ Core defines the reusable contract. A personal instance supplies private state, 
 
 That split is enforced rather than encouraged: Core ships no credentials, no personal
 content, and no live runtime state, and does not acquire them by being used. See
-[Core vs Studio vs Instance](Core-vs-Studio-vs-Instance.md) and
+[Core vs Instance](Core-vs-Instance.md) and
 [CORE_MANIFEST.md](../../CORE_MANIFEST.md).
 
 ## Related
