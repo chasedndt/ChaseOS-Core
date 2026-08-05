@@ -66,8 +66,8 @@
     </path>
   </g>
 
-  <!-- deny path -->
-  <path d="M620 196 V252 H360" stroke="#ff5f6d" stroke-width="2.2" fill="none"
+  <!-- deny path: drops from the gateway straight into the DENY box -->
+  <path d="M620 196 V224" stroke="#ff5f6d" stroke-width="2.2" fill="none"
         marker-end="url(#arwDeny)" stroke-dasharray="6 5"/>
   <rect x="392" y="230" width="238" height="44" rx="9" fill="#2a1420" stroke="#ff5f6d" stroke-opacity=".6"/>
   <text x="511" y="248" class="lbl" text-anchor="middle" font-size="13.5" fill="#ff8a94">DENY — no gateway bound</text>
