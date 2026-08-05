@@ -18,13 +18,17 @@ The operator does not need to provide a finished logo before work can continue.
 
 Codex can prepare candidate directions, prompts, concept-generation instructions, asset inventories, and validation gates from the existing brand docs. The operator must approve the chosen direction before any final asset generation, UI mutation, installer packaging, signing, release promotion, or canonical brand completion claim.
 
+> **Historical plan.** This records how the brand direction was to be approved, written
+> before a direction was chosen. The ChaseOS mark has since been finalised, so the
+> "assets remain planned" framing below describes the state in May 2026, not today.
+> Retained for the governance pattern — approval gates before asset generation — rather
+> than as a live plan.
+
 ## Source Docs
 
-- [ChaseOS_Brand_Foundation.md](ChaseOS_Brand_Foundation.md)
-- [ChaseOS_Logo_Visual_Identity_Brief.md](ChaseOS_Logo_Visual_Identity_Brief.md)
-- [ChaseOS_Logo_Candidate_Directions.md](ChaseOS_Logo_Candidate_Directions.md)
-- [Design_Tokens_Preliminary.md](Design_Tokens_Preliminary.md)
-- [Brand_Copy_Bank.md](Brand_Copy_Bank.md)
+The brand foundation, identity brief, candidate directions, preliminary design tokens and
+copy bank are **not part of public Core**. They are instance-side brand materials, excluded
+under the publication standard in [`CORE_MANIFEST.md`](../../CORE_MANIFEST.md).
 
 ## Stage 0: Candidate Direction Documentation
 
