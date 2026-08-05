@@ -41,6 +41,7 @@ If you're evaluating the design, start with [`docs/ARCHITECTURE.md`](docs/ARCHIT
 |---|---|
 | **[Concepts — start here](docs/concepts/)** | **The 10 concepts in order, and what to defer** |
 | [Glossary](docs/concepts/Glossary.md) | Every ChaseOS term defined in one place |
+| [Multi-runtime coordination](docs/concepts/Multi-Runtime-Coordination.md) | How Core governs agent runtimes and cross-runtime handoff |
 | [Architecture](docs/ARCHITECTURE.md) | Layer model, module map, decision-routing and connections flows (diagrams) |
 | [Decision records (ADRs)](docs/adr/) | Why the architecture is shaped the way it is |
 | [Quickstart](docs/getting-started/Quickstart.md) | Fork-first setup path |
@@ -131,6 +132,38 @@ A healthy fork should:
 6. promote durable truth through an explicit review gate instead of direct agent writeback.
 
 ChaseOS Studio should be treated as an application layer over these Core contracts. Ship public contracts and reviewed source-safe docs in the repo; distribute packaged installers such as `.exe` files through release channels rather than normal source commits.
+
+## Works with your agent runtimes
+
+Core is not an agent. It is the layer **above** them: the runtimes that do the work —
+an agent harness, a coding assistant, an MCP server, a bot acting as an operator control
+plane — are workers, and Core is where their authority is defined, checked and recorded.
+
+<p align="center">
+  <img src="docs/assets/runtime-topology.svg" alt="Runtime workers send task packets inward across a single authority boundary into ChaseOS Core, which applies modality routing, a gate check, the approval gateway, write scope and evidence before a proposal is accepted, denied, or promoted to canonical knowledge." width="960">
+</p>
+
+The rule that makes a multi-agent system survivable:
+
+> **A target runtime does not gain authority because another runtime mentions it.**
+
+Authority comes from the workflow manifest, the role card and the approval gate — never
+from the request. If runtime A instructs runtime B, that instruction is *data*, not
+permission; B still passes its own checks. Without this, a fleet is only as safe as its
+weakest prompt.
+
+Adapting a runtime means declaring a profile and capabilities, accepting task packets, and
+routing authority questions through the Gate port. Core does not care what is inside the
+runtime.
+
+**What Core ships here:** the contracts (runtime profile, capability manifest, task packet,
+adapter spec, handoff protocol) and the Gate port. Core does **not** ship working adapters
+for specific third-party runtimes — the specs under [`docs/runtime/`](docs/runtime/) are
+worked examples of the contract, and those runtimes are not ChaseOS projects.
+[Chaser Agent](https://github.com/chasedndt/Chaser-Agent) is the reference consumer built
+to these principles.
+
+→ [Multi-Runtime Coordination](docs/concepts/Multi-Runtime-Coordination.md)
 
 ## Use Core in your own project
 

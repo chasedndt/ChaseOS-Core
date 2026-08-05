@@ -1,7 +1,7 @@
 # Concepts — start here
 
 ChaseOS Core has more moving parts than you need on day one. This page is the shortest
-honest path through them: **five concepts to understand the system, five more to extend
+honest path through them: **five concepts to understand the system, six more to extend
 it**, and everything else deferred until you actually need it.
 
 If you only read one thing, read *The one idea* below.
@@ -67,7 +67,7 @@ model — the router blocks routes that try.
 
 At this point you understand the system. Everything below is for building on it.
 
-## The next five (extend the system)
+## The next six (extend the system)
 
 ### 6. The Gate port
 
@@ -100,7 +100,15 @@ executing — that is expected, not a bug.
 
 → [ADR-0015](../adr/ADR-0015-aor-workflow-handler-registry.md)
 
-### 10. Evidence
+### 10. Multi-runtime coordination
+
+Core is not an agent — it is the layer above them. Runtimes declare a profile, propose by
+default, and pass work as task packets. The governing rule: a target runtime does not gain
+authority because another runtime mentions it.
+
+→ [Multi-Runtime Coordination](Multi-Runtime-Coordination.md)
+
+### 11. Evidence
 
 Runs produce audit records. Evidence is what makes an approval meaningful after the fact —
 without it, "approved" is just a claim.

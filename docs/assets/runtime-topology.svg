@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 560" width="1120" height="560" role="img" aria-labelledby="rtTitle rtDesc">
+  <title id="rtTitle">ChaseOS Core runtime topology</title>
+  <desc id="rtDesc">Runtime workers send task packets inward through a single authority boundary into ChaseOS Core, which applies modality routing, the gate check, approval and write scope before recording evidence. Authority is granted by Core, never by one runtime asserting it to another.</desc>
+
+  <defs>
+    <linearGradient id="rtBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0d14"/>
+      <stop offset="100%" stop-color="#111a2c"/>
+    </linearGradient>
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#39e6d2" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#39e6d2" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="rtArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#39e6d2"/>
+    </marker>
+    <marker id="rtArrowDeny" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#ff5f6d"/>
+    </marker>
+    <style>
+      .t   { font-family: "Segoe UI", Inter, Helvetica, Arial, sans-serif; }
+      .hd  { font-size: 20px; fill: #e6edf7; font-weight: 700; }
+      .lbl { font-size: 14.5px; fill: #e6edf7; font-weight: 600; }
+      .sub { font-size: 11px; fill: #92a4bd; }
+      .tag { font-size: 10.5px; fill: #7f92ad; }
+      .wk  { fill: #16203a; stroke: #7c5cff; stroke-opacity: .55; }
+      .own { fill: #14243a; stroke: #39e6d2; stroke-opacity: .7; }
+    </style>
+  </defs>
+
+  <rect width="1120" height="560" fill="url(#rtBg)" rx="14"/>
+  <text x="34" y="42" class="t hd">Runtime topology</text>
+  <text x="34" y="64" class="t sub">Runtimes propose. Core decides. Authority is never transferred by assertion.</text>
+
+  <circle cx="560" cy="318" r="210" fill="url(#coreGlow)"/>
+
+  <!-- Authority boundary -->
+  <rect x="330" y="150" width="460" height="336" rx="18" fill="none"
+        stroke="#39e6d2" stroke-opacity="0.45" stroke-width="1.6" stroke-dasharray="8 7"/>
+  <text x="560" y="174" class="t tag" text-anchor="middle" fill="#39e6d2">AUTHORITY BOUNDARY — every inbound packet is checked here</text>
+
+  <!-- Core stack -->
+  <g>
+    <rect x="372" y="196" width="376" height="42" rx="9" class="own"/>
+    <text x="560" y="223" class="t lbl" text-anchor="middle">Modality routing</text>
+
+    <rect x="372" y="248" width="376" height="42" rx="9" class="own"/>
+    <text x="560" y="275" class="t lbl" text-anchor="middle">Gate check — permitted by policy?</text>
+
+    <rect x="372" y="300" width="376" height="42" rx="9" class="own"/>
+    <text x="560" y="327" class="t lbl" text-anchor="middle">Approval gateway — will a human allow it?</text>
+
+    <rect x="372" y="352" width="376" height="42" rx="9" class="own"/>
+    <text x="560" y="379" class="t lbl" text-anchor="middle">Write scope — bounded to which paths?</text>
+
+    <rect x="372" y="404" width="376" height="42" rx="9" class="own"/>
+    <text x="560" y="431" class="t lbl" text-anchor="middle">Evidence — recorded for audit</text>
+  </g>
+
+  <!-- Left: runtime workers -->
+  <text x="34" y="126" class="t tag">RUNTIME WORKERS — declare a profile, propose by default</text>
+
+  <g>
+    <rect x="34" y="150" width="250" height="62" rx="10" class="own"/>
+    <text x="52" y="176" class="t lbl">Chaser Agent</text>
+    <text x="52" y="195" class="t sub">ChaseOS project · review-first harness</text>
+
+    <rect x="34" y="226" width="250" height="62" rx="10" class="wk"/>
+    <text x="52" y="252" class="t lbl">Third-party runtimes</text>
+    <text x="52" y="271" class="t sub">adapter spec examples only</text>
+
+    <rect x="34" y="302" width="250" height="62" rx="10" class="wk"/>
+    <text x="52" y="328" class="t lbl">MCP servers / tools</text>
+    <text x="52" y="347" class="t sub">tool surfaces, approval-gated</text>
+
+    <rect x="34" y="378" width="250" height="62" rx="10" class="wk"/>
+    <text x="52" y="404" class="t lbl">Operator control plane</text>
+    <text x="52" y="423" class="t sub">transport, not approval authority</text>
+
+    <rect x="34" y="454" width="250" height="62" rx="10" class="wk"/>
+    <text x="52" y="480" class="t lbl">Your own runtime</text>
+    <text x="52" y="499" class="t sub">profile + capabilities + task packets</text>
+  </g>
+
+  <!-- inbound task packets -->
+  <g stroke="#39e6d2" stroke-width="2" fill="none" stroke-dasharray="7 6" marker-end="url(#rtArrow)">
+    <path d="M284 181 H326"><animate attributeName="stroke-dashoffset" from="0" to="-13" dur="1.2s" repeatCount="indefinite"/></path>
+    <path d="M284 257 H326"><animate attributeName="stroke-dashoffset" from="0" to="-13" dur="1.2s" repeatCount="indefinite"/></path>
+    <path d="M284 333 H326"><animate attributeName="stroke-dashoffset" from="0" to="-13" dur="1.2s" repeatCount="indefinite"/></path>
+    <path d="M284 409 H326"><animate attributeName="stroke-dashoffset" from="0" to="-13" dur="1.2s" repeatCount="indefinite"/></path>
+    <path d="M284 485 H326"><animate attributeName="stroke-dashoffset" from="0" to="-13" dur="1.2s" repeatCount="indefinite"/></path>
+  </g>
+  <text x="305" y="140" class="t tag" text-anchor="middle" fill="#39e6d2">task packets</text>
+
+  <!-- Right: outcomes -->
+  <text x="820" y="126" class="t tag">OUTCOMES</text>
+
+  <rect x="820" y="150" width="266" height="70" rx="10" fill="#14243a" stroke="#39e6d2" stroke-opacity=".6"/>
+  <text x="840" y="177" class="t lbl">Proposal accepted</text>
+  <text x="840" y="197" class="t sub">executed within its write scope,</text>
+  <text x="840" y="212" class="t sub">then evidenced</text>
+
+  <rect x="820" y="238" width="266" height="70" rx="10" fill="#2a1420" stroke="#ff5f6d" stroke-opacity=".6"/>
+  <text x="840" y="265" class="t lbl" fill="#ff8a94">Denied</text>
+  <text x="840" y="285" class="t sub" fill="#c88b93">no gateway bound, ceiling exceeded,</text>
+  <text x="840" y="300" class="t sub" fill="#c88b93">or approval refused</text>
+
+  <rect x="820" y="326" width="266" height="84" rx="10" fill="#16203a" stroke="#7c5cff" stroke-opacity=".55"/>
+  <text x="840" y="353" class="t lbl">Canonical knowledge</text>
+  <text x="840" y="373" class="t sub">reached only through the promotion</text>
+  <text x="840" y="388" class="t sub">gate — never written directly by a</text>
+  <text x="840" y="403" class="t sub">runtime</text>
+
+  <path d="M792 190 H816" stroke="#39e6d2" stroke-width="2" fill="none" marker-end="url(#rtArrow)"/>
+  <path d="M792 272 H816" stroke="#ff5f6d" stroke-width="2" fill="none" marker-end="url(#rtArrowDeny)" stroke-dasharray="6 5"/>
+  <path d="M792 366 H816" stroke="#7c5cff" stroke-width="2" fill="none" marker-end="url(#rtArrow)"/>
+
+  <text x="560" y="516" class="t sub" text-anchor="middle">A runtime that bypasses these checks is not integrated — it is a process on the same machine.</text>
+</svg>

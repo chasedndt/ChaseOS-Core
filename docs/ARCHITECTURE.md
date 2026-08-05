@@ -125,6 +125,19 @@ flowchart TD
 Every provider manifest defaults to `read_only`; write and external-egress capabilities are
 approval-gated and disabled until a private instance explicitly enables them.
 
+## Runtime Topology
+
+Core sits above the runtimes that do the work. Each declares a profile, proposes by
+default, and passes work inward as task packets — and every packet crosses the same
+authority boundary.
+
+<p align="center">
+  <img src="assets/runtime-topology.svg" alt="Runtime workers send task packets inward across a single authority boundary into ChaseOS Core, which applies modality routing, a gate check, the approval gateway, write scope and evidence before a proposal is accepted, denied, or promoted to canonical knowledge." width="960">
+</p>
+
+See [Multi-Runtime Coordination](concepts/Multi-Runtime-Coordination.md) for the contracts
+and the handoff rules.
+
 ## Core vs. Private Instance
 
 | | ChaseOS Core (this repo) | Private ChaseOS instance |
