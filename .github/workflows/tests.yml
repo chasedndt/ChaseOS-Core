@@ -50,9 +50,10 @@ jobs:
       # write capability enabled by default). If they stop running, the docs lie.
       - name: Examples must run
         run: |
-          python examples/01_inspect_decision_route.py
-          python examples/02_custom_approval_gateway.py
-          python examples/03_load_connection_manifests.py
+          for f in examples/*.py; do
+            echo "--- $f"
+            python "$f" > /dev/null
+          done
 
   # A source checkout masks missing package data, because the files are found on disk
   # regardless. This job installs the built wheel in a directory outside the repo — the
