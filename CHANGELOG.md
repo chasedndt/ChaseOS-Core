@@ -45,7 +45,15 @@ complete" means).
   `docs/runtime/Connections-Bootstrap-Notes.md` and de-referenced the local fork path
   placeholder it previously contained.
 
-## [0.1.0] — 2026-06-25
+## [0.1.0] — published to PyPI 2026-08-05
+
+First release on the Python Package Index: `pip install chaseos-core`. Published via
+Trusted Publishing from `.github/workflows/publish.yml` after a full TestPyPI rehearsal.
+Verified from a clean environment against the live index — CLI runs, all eight provider
+manifests load, the commerce catalogue resolves, the decision router works as a library,
+and the gate denies by default.
+
+### Original contents — 2026-06-25
 
 ### Added
 - Initial public MIT release: local-first runtime substrate (AOR, schedules, capture,

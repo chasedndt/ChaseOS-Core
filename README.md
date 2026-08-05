@@ -8,6 +8,7 @@
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11%2B-7c5cff.svg" alt="Python 3.11+"></a>
   <a href="ROADMAP.md"><img src="https://img.shields.io/badge/status-alpha-orange.svg" alt="Status: Alpha"></a>
   <a href="ruff.toml"><img src="https://img.shields.io/badge/lint-ruff-261230.svg" alt="Linted with Ruff"></a>
+  <a href="https://pypi.org/project/chaseos-core/"><img src="https://img.shields.io/pypi/v/chaseos-core.svg?color=39e6d2" alt="PyPI version"></a>
 </p>
 
 ChaseOS Core is an MIT-licensed, local-first framework for building governed hybrid-intelligence operating systems. It gives fork owners a safe scaffold for memory, projects, source intake, runtime boundaries, approval-gated automation, agent coordination, and evidence-first writeback across humans, deterministic software, ML, and generative agents.
