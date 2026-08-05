@@ -4,6 +4,18 @@ This is the public architecture map for ChaseOS Core: the canonical layers, how 
 moves through the runtime, and where the boundary sits between Core (this repo) and a
 private ChaseOS instance built on top of it.
 
+For the decisions *behind* this architecture — and the trade-offs accepted — see the
+[Architecture Decision Records](adr/).
+
+## Authority Pipeline
+
+The single idea the rest of the architecture serves: nothing material happens without a
+named modality, an approval decision, a bounded write scope, and a record.
+
+<p align="center">
+  <img src="assets/authority-pipeline.svg" alt="Authority pipeline: a request is routed by modality, gated by the ApprovalGateway port, executed within a bounded write scope, and evidenced. Without a bound gateway the path denies by default, and canonical knowledge is reached only through an explicit promotion gate." width="900">
+</p>
+
 ## Canonical Layers
 
 Core organizes a local-first human-AI system into seven layers (see
@@ -125,3 +137,7 @@ approval-gated and disabled until a private instance explicitly enables them.
 See [`FORKING.md`](../FORKING.md) for the practical guide to keeping this split when you
 fork Core, and [`CORE_MANIFEST.md`](../CORE_MANIFEST.md) for the publication standard that
 keeps private state out of this tree.
+
+The dotted "fails closed without" edge in the module map is the decision recorded in
+[ADR-0014](adr/ADR-0014-core-gate-interface.md); the workflow-tier split that keeps private
+workflows out of this repo is [ADR-0015](adr/ADR-0015-aor-workflow-handler-registry.md).

@@ -28,3 +28,36 @@ jobs:
 
       - name: Doctor check
         run: chaseos doctor --vault-root . --json
+
+  # A source checkout masks missing package data, because the files are found on disk
+  # regardless. This job installs the built wheel in a directory outside the repo — the
+  # way an actual user consumes Core — so a dropped manifest/schema fails the build
+  # instead of degrading silently at runtime.
+  wheel-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build wheel
+        run: |
+          pip install build
+          python -m build --wheel -o dist/
+
+      - name: Install wheel outside the source tree
+        run: |
+          mkdir -p /tmp/consumer
+          cd /tmp/consumer
+          pip install "$GITHUB_WORKSPACE"/dist/*.whl
+
+      - name: Packaged data must be present and usable
+        working-directory: /tmp/consumer
+        run: |
+          chaseos version
+          # Fails if provider manifests were not packaged (they would return an empty list).
+          chaseos connections providers --json | python -c "import json,sys; n=len(json.load(sys.stdin)['result']); print(f'providers: {n}'); sys.exit(0 if n > 0 else 1)"
+          # Fails if the commerce catalogue JSON was not packaged.
+          chaseos commerce catalog

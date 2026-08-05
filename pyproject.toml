@@ -70,6 +70,13 @@ chase = "runtime.cli.core_main:main"
 where = ["."]
 include = ["runtime*"]
 
+# Core ships behaviour as data: provider manifests, the AOR task-type table, the decision
+# contract schema, gateway allowlists, and the commerce catalogue. Without these the wheel
+# installs but degrades silently (e.g. `connections providers` returns an empty list), so
+# they must be declared as package data — a wheel-install smoke test guards this in CI.
+[tool.setuptools.package-data]
+"*" = ["*.yaml", "*.yml", "*.json"]
+
 [tool.pytest.ini_options]
 addopts = "-m 'not slow'"
 markers = [

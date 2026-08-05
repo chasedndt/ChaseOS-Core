@@ -1,9 +1,13 @@
-# ChaseOS Core
+<p align="center">
+  <img src="docs/assets/chaseos-core-banner.svg" alt="ChaseOS Core" width="820">
+</p>
 
-[![tests](https://github.com/chasedndt/ChaseOS-Core/actions/workflows/tests.yml/badge.svg)](https://github.com/chasedndt/ChaseOS-Core/actions/workflows/tests.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
-[![Status: Alpha](https://img.shields.io/badge/status-alpha-orange.svg)](ROADMAP.md)
+<p align="center">
+  <a href="https://github.com/chasedndt/ChaseOS-Core/actions/workflows/tests.yml"><img src="https://github.com/chasedndt/ChaseOS-Core/actions/workflows/tests.yml/badge.svg" alt="tests"></a>
+  <a href="LICENSE.md"><img src="https://img.shields.io/badge/License-MIT-39e6d2.svg" alt="License: MIT"></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11%2B-7c5cff.svg" alt="Python 3.11+"></a>
+  <a href="ROADMAP.md"><img src="https://img.shields.io/badge/status-alpha-orange.svg" alt="Status: Alpha"></a>
+</p>
 
 ChaseOS Core is an MIT-licensed, local-first framework for building governed hybrid-intelligence operating systems. It gives fork owners a safe scaffold for memory, projects, source intake, runtime boundaries, approval-gated automation, agent coordination, and evidence-first writeback across humans, deterministic software, ML, and generative agents.
 
@@ -23,6 +27,10 @@ afterward. That shows up as three concrete defaults:
 - **Truth is promoted, not written.** Captures land in quarantine; canonical knowledge is
   reached through an explicit review gate, not direct agent writeback.
 
+<p align="center">
+  <img src="docs/assets/authority-pipeline.svg" alt="Authority pipeline: a request is routed by modality, gated by the ApprovalGateway port, executed within a bounded write scope, and evidenced. Without a bound gateway the path denies by default, and canonical knowledge is reached only through an explicit promotion gate." width="900">
+</p>
+
 If you're evaluating the design, start with [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Documentation
@@ -30,6 +38,7 @@ If you're evaluating the design, start with [`docs/ARCHITECTURE.md`](docs/ARCHIT
 | Doc | What it covers |
 |---|---|
 | [Architecture](docs/ARCHITECTURE.md) | Layer model, module map, decision-routing and connections flows (diagrams) |
+| [Decision records (ADRs)](docs/adr/) | Why the architecture is shaped the way it is |
 | [Quickstart](docs/getting-started/Quickstart.md) | Fork-first setup path |
 | [Core Operating Model](docs/concepts/Core-Operating-Model.md) | The seven canonical layers |
 | [Command Reference](docs/cli/Command-Reference.md) | Full CLI surface |
