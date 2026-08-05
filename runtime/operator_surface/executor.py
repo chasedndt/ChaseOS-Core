@@ -31,16 +31,14 @@ from typing import Optional, Callable
 from runtime.operator_surface.contracts import (
     OperatorScope,
     OperatorRunAudit,
-    SessionStatus,
 )
 from runtime.operator_surface.capabilities import SurfaceType
 from runtime.operator_surface.events import OperatorEvent, OperatorEventType
 from runtime.operator_surface.session import SessionManager
-from runtime.operator_surface.approvals import ApprovalStore, ApprovalDenied
+from runtime.operator_surface.approvals import ApprovalStore
 from runtime.operator_surface.scopes import (
     ScopeViolation,
     check_action_limit,
-    enforce_uri_in_scope,
     action_requires_approval,
     approval_required_actions_for,
 )

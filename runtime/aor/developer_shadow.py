@@ -315,19 +315,19 @@ def _build_developer_brief(
 ) -> str:
     lines = [
         f"# Developer Brief — {focus_area or 'General'}",
-        f"",
+        "",
         f"**Generated:** {run_ts}",
         f"**Focus Area:** `{focus_area or '(not specified)'}`",
         f"**Question:** {question or '(not specified)'}",
         f"**Project Scope:** {project_scope or '(not specified)'}",
-        f"**Mode:** shadow/draft-only — no canonical writes",
-        f"",
-        f"---",
-        f"",
-        f"## [CONTEXT READ]",
-        f"",
-        f"Files read for this brief:",
-        f"",
+        "**Mode:** shadow/draft-only — no canonical writes",
+        "",
+        "---",
+        "",
+        "## [CONTEXT READ]",
+        "",
+        "Files read for this brief:",
+        "",
     ]
 
     for rel_path, content in read_files:
@@ -335,11 +335,11 @@ def _build_developer_brief(
         lines.append(f"- `{rel_path}` ({size:,} chars)")
 
     lines += [
-        f"",
-        f"---",
-        f"",
+        "",
+        "---",
+        "",
         f"## [REPO TRUTH — {focus_area or 'General'}]",
-        f"",
+        "",
     ]
 
     if read_files:
@@ -348,62 +348,62 @@ def _build_developer_brief(
                 continue
             summary = [l for l in content.split("\n") if l.strip()][:4]
             lines.append(f"### `{rel_path}`")
-            lines.append(f"")
+            lines.append("")
             for sl in summary:
                 lines.append(f"  {sl}")
-            lines.append(f"")
+            lines.append("")
     else:
         lines += [
             f"No readable files found for focus area: `{focus_area}`",
-            f"",
+            "",
         ]
 
     lines += [
-        f"---",
-        f"",
-        f"## [CONTRADICTION SCAN]",
-        f"",
+        "---",
+        "",
+        "## [CONTRADICTION SCAN]",
+        "",
     ]
 
     if contradictions:
         lines.append(f"**{len(contradictions)} potential issue(s) detected:**")
-        lines.append(f"")
+        lines.append("")
         for c in contradictions:
             lines.append(f"- **{c.finding_type}** ({c.confidence}) — `{c.file_path}`")
             lines.append(f"  {c.description}")
-            lines.append(f"")
+            lines.append("")
     else:
         lines += [
-            f"No obvious contradictions detected in declared read scope.",
-            f"",
+            "No obvious contradictions detected in declared read scope.",
+            "",
         ]
 
     lines += [
-        f"---",
-        f"",
-        f"## [HOW IT FITS]",
-        f"",
+        "---",
+        "",
+        "## [HOW IT FITS]",
+        "",
         f"Focus area `{focus_area or '(general)'}` is part of the ChaseOS Phase 9 Operator Runtime.",
-        f"",
-        f"Read order for this area:",
-        f"1. `CLAUDE.md` — routing anchor and audit notes",
-        f"2. `00_HOME/Now.md` — current sprint focus",
-        f"3. Relevant Project-OS file for the domain",
-        f"4. The specific files in `target_paths` or `focus_area`",
-        f"",
-        f"---",
-        f"",
-        f"## [NEXT PASS SUGGESTIONS]",
-        f"",
-        f"1. Review contradiction scan findings above",
-        f"2. Check stale NOT BUILT claims in docs vs current repo state",
-        f"3. Use the Implementation Brief (separate artifact) as input to the next engineering pass",
-        f"4. No canonical writes have been made — all outputs are advisory",
-        f"",
-        f"---",
-        f"",
-        f"*Developer Co-Development Mode — ChaseOS Phase 9*",
-        f"*ChaseOS-owned feature. Runs through adapters. Does not belong to adapters.*",
+        "",
+        "Read order for this area:",
+        "1. `CLAUDE.md` — routing anchor and audit notes",
+        "2. `00_HOME/Now.md` — current sprint focus",
+        "3. Relevant Project-OS file for the domain",
+        "4. The specific files in `target_paths` or `focus_area`",
+        "",
+        "---",
+        "",
+        "## [NEXT PASS SUGGESTIONS]",
+        "",
+        "1. Review contradiction scan findings above",
+        "2. Check stale NOT BUILT claims in docs vs current repo state",
+        "3. Use the Implementation Brief (separate artifact) as input to the next engineering pass",
+        "4. No canonical writes have been made — all outputs are advisory",
+        "",
+        "---",
+        "",
+        "*Developer Co-Development Mode — ChaseOS Phase 9*",
+        "*ChaseOS-owned feature. Runs through adapters. Does not belong to adapters.*",
     ]
 
     return "\n".join(lines)
@@ -417,45 +417,45 @@ def _build_contradiction_scan(
 ) -> str:
     lines = [
         f"# Contradiction Scan — {focus_area or 'General'}",
-        f"",
+        "",
         f"**Generated:** {run_ts}",
         f"**Files scanned:** {len(read_files)}",
         f"**Findings:** {len(contradictions)}",
-        f"**Mode:** heuristic scan — declared read scope only; no ambient traversal",
-        f"",
-        f"---",
-        f"",
+        "**Mode:** heuristic scan — declared read scope only; no ambient traversal",
+        "",
+        "---",
+        "",
     ]
 
     if contradictions:
-        lines.append(f"## Findings")
-        lines.append(f"")
+        lines.append("## Findings")
+        lines.append("")
         for i, c in enumerate(contradictions, 1):
             lines += [
                 f"### Finding {i}: {c.finding_type}",
-                f"",
+                "",
                 f"**File:** `{c.file_path}`",
                 f"**Confidence:** {c.confidence}",
-                f"",
+                "",
                 f"{c.description}",
-                f"",
-                f"**Action:** Verify this claim against current repo state before the next pass.",
-                f"",
+                "",
+                "**Action:** Verify this claim against current repo state before the next pass.",
+                "",
             ]
     else:
         lines += [
-            f"## No Findings",
-            f"",
-            f"No obvious contradictions detected in declared read scope.",
-            f"",
-            f"Note: this is a heuristic scan only. Manual review of the focus area is always recommended.",
-            f"",
+            "## No Findings",
+            "",
+            "No obvious contradictions detected in declared read scope.",
+            "",
+            "Note: this is a heuristic scan only. Manual review of the focus area is always recommended.",
+            "",
         ]
 
     lines += [
-        f"---",
-        f"",
-        f"*Contradiction Scan — Developer Co-Development Mode — ChaseOS Phase 9*",
+        "---",
+        "",
+        "*Contradiction Scan — Developer Co-Development Mode — ChaseOS Phase 9*",
     ]
 
     return "\n".join(lines)
@@ -470,57 +470,57 @@ def _build_implementation_brief(
 ) -> str:
     lines = [
         f"# Implementation Brief — {focus_area or 'Next Pass'}",
-        f"",
+        "",
         f"**Date:** {run_ts}",
         f"**Focus:** `{focus_area}`",
         f"**Scope:** {project_scope}",
-        f"**Status:** draft — review before use as pass prompt",
-        f"",
-        f"---",
-        f"",
-        f"## Context to Read",
-        f"",
-        f"Read these files before starting the pass:",
-        f"",
+        "**Status:** draft — review before use as pass prompt",
+        "",
+        "---",
+        "",
+        "## Context to Read",
+        "",
+        "Read these files before starting the pass:",
+        "",
     ]
 
     for rel_path, _ in read_files:
         lines.append(f"- `{rel_path}`")
 
     lines += [
-        f"",
-        f"---",
-        f"",
-        f"## Task",
-        f"",
+        "",
+        "---",
+        "",
+        "## Task",
+        "",
         f"{question or '(fill in the specific task for this pass)'}",
-        f"",
-        f"---",
-        f"",
-        f"## Constraints",
-        f"",
+        "",
+        "---",
+        "",
+        "## Constraints",
+        "",
         f"- Focus area: `{focus_area}`",
         f"- Project scope: `{project_scope}`",
-        f"- Do not modify protected files without explicit instruction",
-        f"- Write outputs to appropriate log / archive targets",
-        f"- Create build log + archive note at session close",
-        f"- Follow CLAUDE.md writeback requirements",
-        f"",
-        f"---",
-        f"",
-        f"## Start Sequence",
-        f"",
-        f"1. Read CLAUDE.md (routing anchor)",
-        f"2. Read 00_HOME/Now.md (sprint focus)",
-        f"3. Read the files listed in 'Context to Read' above",
-        f"4. Execute the task",
-        f"5. Write build log to 07_LOGS/Build-Logs/",
-        f"6. Update Now.md if phase state changed",
-        f"",
-        f"---",
-        f"",
-        f"*Generated by Developer Co-Development Mode — ChaseOS Phase 9*",
-        f"*This is a draft artifact. Review and adjust before executing as a pass prompt.*",
+        "- Do not modify protected files without explicit instruction",
+        "- Write outputs to appropriate log / archive targets",
+        "- Create build log + archive note at session close",
+        "- Follow CLAUDE.md writeback requirements",
+        "",
+        "---",
+        "",
+        "## Start Sequence",
+        "",
+        "1. Read CLAUDE.md (routing anchor)",
+        "2. Read 00_HOME/Now.md (sprint focus)",
+        "3. Read the files listed in 'Context to Read' above",
+        "4. Execute the task",
+        "5. Write build log to 07_LOGS/Build-Logs/",
+        "6. Update Now.md if phase state changed",
+        "",
+        "---",
+        "",
+        "*Generated by Developer Co-Development Mode — ChaseOS Phase 9*",
+        "*This is a draft artifact. Review and adjust before executing as a pass prompt.*",
     ]
 
     return "\n".join(lines)
@@ -534,15 +534,15 @@ def _build_doc_refresh_proposal(
 ) -> str:
     lines = [
         f"# Doc Refresh Proposal - {focus_area or 'General'}",
-        f"",
+        "",
         f"**Generated:** {run_ts}",
-        f"**Status:** draft proposal only - review before any canonical edit",
-        f"**Read Scope:** declared files only; no ambient traversal",
-        f"",
-        f"---",
-        f"",
-        f"## Structured Diff Proposals",
-        f"",
+        "**Status:** draft proposal only - review before any canonical edit",
+        "**Read Scope:** declared files only; no ambient traversal",
+        "",
+        "---",
+        "",
+        "## Structured Diff Proposals",
+        "",
     ]
 
     if contradictions:
@@ -550,22 +550,22 @@ def _build_doc_refresh_proposal(
             proposal_id = f"dev-doc-refresh-{index:02d}"
             lines += [
                 f"### Proposal {index}",
-                f"",
+                "",
                 f"- proposal_id: `{proposal_id}`",
                 f"- target_file: `{finding.file_path}`",
-                f"- status: REVIEW_REQUIRED",
-                f"- operation: verify_then_edit",
+                "- status: REVIEW_REQUIRED",
+                "- operation: verify_then_edit",
                 f"- confidence: {finding.confidence}",
                 f"- finding_type: {finding.finding_type}",
                 f"- reason: {finding.description}",
-                f"",
-                f"```diff",
-                f"# Draft-only proposal. No canonical edit has been applied.",
+                "",
+                "```diff",
+                "# Draft-only proposal. No canonical edit has been applied.",
                 f"# Verify current repo truth before changing {finding.file_path}.",
-                f"- <stale-or-conflicting claim>",
-                f"+ <truthful replacement after verification>",
-                f"```",
-                f"",
+                "- <stale-or-conflicting claim>",
+                "+ <truthful replacement after verification>",
+                "```",
+                "",
             ]
     else:
         lines += [
@@ -579,27 +579,27 @@ def _build_doc_refresh_proposal(
         ]
 
     lines += [
-        f"",
-        f"---",
-        f"",
-        f"## Files Considered",
-        f"",
+        "",
+        "---",
+        "",
+        "## Files Considered",
+        "",
     ]
 
     for rel_path, _ in read_files:
         lines.append(f"- `{rel_path}`")
 
     lines += [
-        f"",
-        f"---",
-        f"",
-        f"## Guardrails",
-        f"",
-        f"- This artifact does not modify README, architecture docs, project files, or knowledge notes.",
-        f"- It is not a promotion into `02_KNOWLEDGE/`.",
-        f"- Adapter-specific differences belong in adapter manifests and configs, not in feature identity.",
-        f"",
-        f"*Doc Refresh Proposal - Developer Co-Development Mode - ChaseOS Phase 9*",
+        "",
+        "---",
+        "",
+        "## Guardrails",
+        "",
+        "- This artifact does not modify README, architecture docs, project files, or knowledge notes.",
+        "- It is not a promotion into `02_KNOWLEDGE/`.",
+        "- Adapter-specific differences belong in adapter manifests and configs, not in feature identity.",
+        "",
+        "*Doc Refresh Proposal - Developer Co-Development Mode - ChaseOS Phase 9*",
     ]
 
     return "\n".join(lines)
@@ -615,53 +615,53 @@ def _build_run_build_log(
     run_ts: str,
 ) -> str:
     lines = [
-        f"# Developer Co-Development Mode Shadow Run",
-        f"",
+        "# Developer Co-Development Mode Shadow Run",
+        "",
         f"**Generated:** {run_ts}",
-        f"**Workflow:** `developer_repo_explain_shadow`",
-        f"**Feature Owner:** ChaseOS",
-        f"**Mode:** shadow / draft-only",
+        "**Workflow:** `developer_repo_explain_shadow`",
+        "**Feature Owner:** ChaseOS",
+        "**Mode:** shadow / draft-only",
         f"**Focus Area:** `{focus_area or '(not specified)'}`",
         f"**Question:** {question or '(not specified)'}",
         f"**Project Scope:** {project_scope or '(not specified)'}",
-        f"",
-        f"---",
-        f"",
-        f"## What Ran",
-        f"",
-        f"The workflow read narrow declared context and generated draft developer-support artifacts.",
-        f"It did not perform shell, git, browser automation, network calls, credential reads, or canonical writeback.",
-        f"",
-        f"## Read Scope",
-        f"",
+        "",
+        "---",
+        "",
+        "## What Ran",
+        "",
+        "The workflow read narrow declared context and generated draft developer-support artifacts.",
+        "It did not perform shell, git, browser automation, network calls, credential reads, or canonical writeback.",
+        "",
+        "## Read Scope",
+        "",
     ]
 
     for rel_path, _ in read_files:
         lines.append(f"- `{rel_path}`")
 
     lines += [
-        f"",
-        f"## Outputs",
-        f"",
+        "",
+        "## Outputs",
+        "",
     ]
 
     for path in output_paths:
         lines.append(f"- `{path}`")
 
     lines += [
-        f"",
-        f"## Drift Findings",
-        f"",
+        "",
+        "## Drift Findings",
+        "",
         f"- Findings detected: {len(contradictions)}",
-        f"",
-        f"## Boundary Confirmation",
-        f"",
-        f"- ChaseOS owns the feature identity.",
-        f"- The workflow runs through declared adapters; it is not adapter-owned.",
-        f"- Adapter-specific config remains outside the feature identity.",
-        f"- Writeback is limited to draft/log/archive targets declared by the manifest and role card.",
-        f"",
-        f"*Generated build log artifact for a shadow workflow run.*",
+        "",
+        "## Boundary Confirmation",
+        "",
+        "- ChaseOS owns the feature identity.",
+        "- The workflow runs through declared adapters; it is not adapter-owned.",
+        "- Adapter-specific config remains outside the feature identity.",
+        "- Writeback is limited to draft/log/archive targets declared by the manifest and role card.",
+        "",
+        "*Generated build log artifact for a shadow workflow run.*",
     ]
 
     return "\n".join(lines)
@@ -673,37 +673,37 @@ def _build_archive_note(
     run_ts: str,
 ) -> str:
     lines = [
-        f"# Developer Co-Development Mode Shadow Run Archive Note",
-        f"",
+        "# Developer Co-Development Mode Shadow Run Archive Note",
+        "",
         f"**Generated:** {run_ts}",
-        f"**Workflow:** `developer_repo_explain_shadow`",
+        "**Workflow:** `developer_repo_explain_shadow`",
         f"**Focus Area:** `{focus_area or '(not specified)'}`",
-        f"**Status:** archive note for draft-only workflow output",
-        f"",
-        f"---",
-        f"",
-        f"## Summary",
-        f"",
-        f"Developer Co-Development Mode produced draft repo-intelligence artifacts for the declared focus area.",
-        f"The run preserved the ChaseOS-owned, adapter-capable boundary and made no canonical knowledge changes.",
-        f"",
-        f"## Produced Artifacts",
-        f"",
+        "**Status:** archive note for draft-only workflow output",
+        "",
+        "---",
+        "",
+        "## Summary",
+        "",
+        "Developer Co-Development Mode produced draft repo-intelligence artifacts for the declared focus area.",
+        "The run preserved the ChaseOS-owned, adapter-capable boundary and made no canonical knowledge changes.",
+        "",
+        "## Produced Artifacts",
+        "",
     ]
 
     for path in output_paths:
         lines.append(f"- `{path}`")
 
     lines += [
-        f"",
-        f"## Non-Goals Preserved",
-        f"",
-        f"- No canonical writeback",
-        f"- No shell, git, browser automation, network, connector, or credential access",
-        f"- No promotion into `02_KNOWLEDGE/`",
-        f"- No feature ownership transfer to any provider, harness, or adapter",
-        f"",
-        f"*Documentation-history note for Developer Co-Development Mode shadow run.*",
+        "",
+        "## Non-Goals Preserved",
+        "",
+        "- No canonical writeback",
+        "- No shell, git, browser automation, network, connector, or credential access",
+        "- No promotion into `02_KNOWLEDGE/`",
+        "- No feature ownership transfer to any provider, harness, or adapter",
+        "",
+        "*Documentation-history note for Developer Co-Development Mode shadow run.*",
     ]
 
     return "\n".join(lines)
@@ -718,16 +718,16 @@ def _build_diagram_proposal(
 
     lines = [
         f"# Diagram Proposal — {focus_area or 'General'}",
-        f"",
+        "",
         f"**Generated:** {run_ts}",
-        f"**Status:** draft text artifact — review before rendering",
-        f"**Note:** text/Mermaid only; no live rendering in Phase 9",
-        f"",
-        f"---",
-        f"",
-        f"## File Map (ASCII)",
-        f"",
-        f"```",
+        "**Status:** draft text artifact — review before rendering",
+        "**Note:** text/Mermaid only; no live rendering in Phase 9",
+        "",
+        "---",
+        "",
+        "## File Map (ASCII)",
+        "",
+        "```",
         f"{focus_area or 'focus_area'}/",
     ]
 
@@ -737,13 +737,13 @@ def _build_diagram_proposal(
         lines.append(f"{indent}├── {Path(rel_path).name}")
 
     lines += [
-        f"```",
-        f"",
-        f"---",
-        f"",
-        f"## Python Import Graph (draft, from declared files)",
-        f"",
-        f"```",
+        "```",
+        "",
+        "---",
+        "",
+        "## Python Import Graph (draft, from declared files)",
+        "",
+        "```",
     ]
 
     for rel_path, content in read_files:
@@ -756,14 +756,14 @@ def _build_diagram_proposal(
                 lines.append(f"  └─ {imp}")
 
     lines += [
-        f"```",
-        f"",
-        f"---",
-        f"",
-        f"## Mermaid Flow (draft)",
-        f"",
-        f"```mermaid",
-        f"graph TD",
+        "```",
+        "",
+        "---",
+        "",
+        "## Mermaid Flow (draft)",
+        "",
+        "```mermaid",
+        "graph TD",
         f'    Focus["{focus_area or "Focus Area"}"]',
     ]
 
@@ -773,12 +773,12 @@ def _build_diagram_proposal(
         lines.append(f"    Focus --> F{i}")
 
     lines += [
-        f"```",
-        f"",
-        f"---",
-        f"",
-        f"*Diagram Proposal — Developer Co-Development Mode — ChaseOS Phase 9*",
-        f"*Text-only draft. Requires human review before use. Studio rendering is Phase 10.*",
+        "```",
+        "",
+        "---",
+        "",
+        "*Diagram Proposal — Developer Co-Development Mode — ChaseOS Phase 9*",
+        "*Text-only draft. Requires human review before use. Studio rendering is Phase 10.*",
     ]
 
     return "\n".join(lines)

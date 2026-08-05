@@ -11,12 +11,10 @@ Conformance contract defined in: 06_AGENTS/Operator-Surface-Adapter-Spec.md
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Callable, Optional
+from typing import Callable
 
 from runtime.operator_surface.capabilities import (
-    OperatorCapability,
     SurfaceType,
-    GroundingMode,
 )
 from runtime.operator_surface.contracts import (
     OperatorScope,

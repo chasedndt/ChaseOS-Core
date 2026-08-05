@@ -32,7 +32,6 @@ Spec: 06_AGENTS/Operator-Surface-Adapter-Spec.md
 from __future__ import annotations
 
 import os
-import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable, Optional
@@ -49,9 +48,8 @@ from runtime.operator_surface.contracts import (
     StepResult,
     RecoveryResult,
 )
-from runtime.operator_surface.events import OperatorEvent, OperatorEventType
+from runtime.operator_surface.events import OperatorEvent
 from runtime.operator_surface.recovery import (
-    UnrecoverableFailure,
     build_recovery_started_event,
     build_recovery_complete_event,
 )

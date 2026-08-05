@@ -27,6 +27,15 @@ pytest
 - Match existing patterns: approval-gated writes, fail-closed adapters, read-only-by-default
   provider manifests (see [`kernel/PERMISSION_MATRIX.md`](kernel/PERMISSION_MATRIX.md)).
 - Add or update tests under `tests/` for any behavior change.
+- Run the linter before pushing — CI blocks on it:
+
+  ```bash
+  ruff check .
+  ```
+
+  The gate covers defect-class rules only (undefined names, mutable default
+  arguments, redefinitions), not style. [`ruff.toml`](ruff.toml) documents why each rule
+  is selected and which exemptions are deliberate.
 - Do not commit credentials, live runtime state, personal vault content, or machine-local
   paths. Before opening a PR, run the repo-safe secret audit:
 

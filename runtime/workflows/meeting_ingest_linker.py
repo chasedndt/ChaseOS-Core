@@ -30,7 +30,7 @@ Public API:
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
@@ -405,7 +405,7 @@ def _render_proposal_report(
 
     lines: list[str] = [
         "---",
-        f"type: link-proposal",
+        "type: link-proposal",
         f"capture_id: {capture_id}",
         f"transcript: {transcript_path}",
         f"report_date: {report_date}",
@@ -480,7 +480,7 @@ def _render_proposal_report(
     lines.append("")
     lines.append("To apply accepted links, review the proposals above and run:")
     lines.append("```")
-    lines.append(f"chaseos intake link-apply <proposal_path>")
+    lines.append("chaseos intake link-apply <proposal_path>")
     lines.append("```")
     lines.append("")
     lines.append("*(link-apply is a future Phase 9 operator command — not yet implemented)*")

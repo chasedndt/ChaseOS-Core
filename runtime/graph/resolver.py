@@ -32,14 +32,13 @@ Design rules:
 
 from __future__ import annotations
 
-import re
 from pathlib import Path
 from typing import Optional
 
 from .artifact import (
     GraphSnapshot, GraphEdge,
     NodeType, Confidence,
-    make_edge, make_node_id,
+    make_edge,
 )
 
 # New relation type for resolved import edges (additive — does not break pass 1)

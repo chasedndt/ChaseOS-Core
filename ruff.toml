@@ -1,0 +1,60 @@
+# Ruff configuration for ChaseOS Core.
+#
+# Philosophy: the CI gate blocks on rules that catch *defects*, not on style
+# preferences. Every rule selected below passes cleanly today, so the gate is
+# meaningful from day one rather than being introduced with a backlog of
+# pre-existing violations to ignore.
+#
+# Run locally:
+#   pip install ruff
+#   ruff check .          # what CI enforces
+#   ruff check . --fix    # apply safe fixes
+#
+# To see the broader advisory set (style, modernization, import order) that is
+# deliberately NOT gated:
+#   ruff check . --select ALL --statistics
+
+target-version = "py311"
+line-length = 100
+
+exclude = [
+    ".venv*",
+    "build",
+    "dist",
+    "99_ARCHIVE",
+]
+
+[lint]
+select = [
+    "E9",   # syntax / IO errors that stop the file being parsed
+    "F63",  # comparison and assertion mistakes (e.g. `assert (a, b)` — always true)
+    "F7",   # syntax-adjacent logic errors (break outside loop, etc.)
+    "F82",  # undefined names — the classic NameError-at-runtime bug
+    "F401", # unused imports (dead references, and they slow import time)
+    "F811", # redefinition of an unused name — usually a copy/paste bug
+    "F502", # percent-format mistakes
+    "F632", # `is` comparison with a literal — a real correctness trap
+    "B002", # unary prefix increment (`++n` does nothing in Python)
+    "B006", # mutable default argument — shared state across calls
+    "B018", # useless expression — a statement that does nothing
+    "PLE",  # pylint errors (genuine mistakes, not opinions)
+]
+
+# F841 (assigned-but-never-used locals) is intentionally NOT gated. There are a
+# handful of instances in the graph/extractor and workflow modules where the
+# assignment documents an intermediate step; they are harmless, and ruff has no
+# safe autofix for them. Tracked as cleanup, not treated as a build blocker.
+
+[lint.per-file-ignores]
+# Package roots re-export names for the public API; those imports are "unused"
+# by definition but are the point of the module.
+"__init__.py" = ["F401"]
+# Examples favour clarity over import hygiene and are executed in CI, which is
+# the real check that they work.
+"examples/*" = ["F401"]
+# The prompt-injection scanner holds zero-width and bidi control characters as
+# literals because those characters ARE its detection set. Ruff flags them as
+# obfuscation risk, which is exactly backwards here: escaping them (PLE2515) or
+# removing them (PLE2502) would break the scanner. Deliberate, reviewed
+# exemption — do not "fix" this file to satisfy the linter.
+"runtime/security/injection_scan.py" = ["PLE2515", "PLE2502"]

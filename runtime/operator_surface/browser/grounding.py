@@ -34,7 +34,6 @@ from typing import Any, Optional
 
 from runtime.operator_surface.capabilities import GroundingMode
 from runtime.operator_surface.browser.perception import (
-    PageState,
     read_dom_elements,
     read_accessibility_tree,
     capture_screenshot,

@@ -37,7 +37,7 @@ from typing import Any, Optional
 
 from .registry import load_manifest
 from .role_cards import load_card
-from .task_router import classify, UNCLASSIFIED_SENTINEL
+from .task_router import classify
 from .path_policy import (
     AORPathPolicyError,
     is_runtime_declared_placeholder,
@@ -882,7 +882,7 @@ def run_workflow(
                 status="escalated",
                 audit_id=audit_id,
                 stage_reached="context_boot",
-                escalation_reason=f"context boot failed — Now.md not found; "
+                escalation_reason="context boot failed — Now.md not found; "
                                   "runtime has no phase/sprint anchor and cannot proceed",
             )
     except Exception as _boot_exc:  # noqa: BLE001

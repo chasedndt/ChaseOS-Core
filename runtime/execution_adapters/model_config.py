@@ -8,7 +8,6 @@ No anthropic SDK — API calls are stdlib urllib.request in execute.py.
 """
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterator, Any

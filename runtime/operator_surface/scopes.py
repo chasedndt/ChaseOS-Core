@@ -10,7 +10,6 @@ Scope model defined in: 06_AGENTS/Full-System-Operator-Surface.md Section 6.1
 
 from __future__ import annotations
 
-from typing import Optional
 from urllib.parse import urlparse
 
 from runtime.operator_surface.contracts import OperatorScope

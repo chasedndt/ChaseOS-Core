@@ -30,7 +30,7 @@ import random
 from collections import deque
 from typing import Optional
 
-from .artifact import GraphSnapshot, Confidence
+from .artifact import Confidence
 from .index import GraphIndex
 
 

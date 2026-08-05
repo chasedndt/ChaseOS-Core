@@ -10,7 +10,7 @@ import cycle (accounts → store, events).
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Optional
 
 from runtime.commerce import events, store
 

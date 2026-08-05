@@ -40,8 +40,7 @@ Integration example (AOR engine, Stage 5):
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
-from typing import Optional
+from dataclasses import dataclass
 
 from .query import GraphQueryService
 

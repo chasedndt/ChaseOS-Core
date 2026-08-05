@@ -369,24 +369,24 @@ def _build_research_summary(
         url_display = r["url"] or r["requested_url"]
         title_display = r["title"] or "(no title)"
         lines.append(f"### Page {i}: {url_display}")
-        lines.append(f"")
+        lines.append("")
         lines.append(f"**Title:** {title_display}")
         lines.append(f"**Adapter mode:** {r['adapter_mode']}")
         lines.append(f"**Run ID:** {r['run_id'] or 'N/A'}")
 
         if not r["success"]:
-            lines.append(f"**Status:** FAILED")
+            lines.append("**Status:** FAILED")
             if r["error"]:
                 lines.append(f"**Error:** {r['error']}")
             lines.append("")
             continue
 
         if r.get("is_stub") or not r.get("text"):
-            lines.append(f"**Status:** COMPLETE (stub — no real content extracted)")
+            lines.append("**Status:** COMPLETE (stub — no real content extracted)")
             lines.append("")
             continue
 
-        lines.append(f"**Status:** COMPLETE")
+        lines.append("**Status:** COMPLETE")
         lines.append(f"**Characters read:** {r['char_count']}")
         lines.append("")
         lines.append("**Text excerpt** *(untrusted — raw page content for operator review only)*:")

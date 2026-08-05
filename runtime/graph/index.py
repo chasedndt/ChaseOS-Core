@@ -22,7 +22,6 @@ No mutable graph library objects. Dicts and lists only.
 from __future__ import annotations
 
 from collections import defaultdict
-from typing import Optional
 
 from .artifact import GraphSnapshot, GraphNode, GraphEdge
 

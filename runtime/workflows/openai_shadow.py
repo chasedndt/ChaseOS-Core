@@ -183,7 +183,7 @@ def run_openai_operator_research_shadow(
     audit_lines = [
         "# OpenAI Shadow Workflow Activity",
         "",
-        f"- Runtime: Codex-executed local handler for OpenAI adapter foundation",
+        "- Runtime: Codex-executed local handler for OpenAI adapter foundation",
         f"- Workflow: {manifest.get('id')}",
         f"- Created UTC: {now.isoformat()}",
         "- Live OpenAI API call: false",

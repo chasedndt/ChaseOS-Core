@@ -8,7 +8,7 @@ All adapters declare their SURFACE_TYPE, CAPABILITIES, and GROUNDING_MODES
 as class-level constants conforming to these enums.
 """
 
-from enum import Enum, auto
+from enum import Enum
 
 
 class SurfaceType(str, Enum):

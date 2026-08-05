@@ -328,7 +328,7 @@ def parse_atom(xml_text: str) -> tuple[str | None, list[dict]]:
     for entry in _findall(root, "entry"):
         # Extract link: prefer rel="alternate", then first link with href
         link = None
-        link_els = entry.findall(f"a:link", ns) or entry.findall("link")
+        link_els = entry.findall("a:link", ns) or entry.findall("link")
         for lel in link_els:
             rel = lel.get("rel", "alternate")
             href = lel.get("href")

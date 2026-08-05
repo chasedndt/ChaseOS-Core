@@ -80,12 +80,12 @@ def _build_structured_summary(workspace_id: str, outputs: list[dict]) -> str:
     """Build a structured Markdown synthesis summary from workspace outputs."""
     lines = [
         f"# Research Synthesis — {workspace_id}",
-        f"",
+        "",
         f"**Workspace:** `{workspace_id}`",
         f"**Generated:** {_now_iso()[:19]}Z",
         f"**Outputs included:** {len(outputs)}",
-        f"**Synthesis type:** structured-summary",
-        f"",
+        "**Synthesis type:** structured-summary",
+        "",
         "---",
         "",
     ]

@@ -46,7 +46,6 @@ from .artifact import (
     Confidence, make_snapshot_id, utc_now_iso,
 )
 from .extractor import (
-    ExtractionResult,
     PythonExtractor,
     YAMLManifestExtractor,
     MarkdownExtractor,

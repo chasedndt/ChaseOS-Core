@@ -10,10 +10,7 @@ Recovery model defined in: 06_AGENTS/Full-System-Operator-Surface.md Section 6.6
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Optional, Callable
 
-from runtime.operator_surface.contracts import RecoveryResult, StepResult
 from runtime.operator_surface.events import OperatorEvent, OperatorEventType
 
 
