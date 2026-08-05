@@ -1,0 +1,182 @@
+{
+  "authority_flags": {
+    "canonical_truth_promoted": false,
+    "external_source_used": false,
+    "hermes_memory_mutated": false,
+    "network_call_performed": false,
+    "provider_call_performed": false,
+    "runtime_memory_provider_switched": false
+  },
+  "candidates": [
+    {
+      "attribute": null,
+      "category": "preference",
+      "duplicate_of": null,
+      "entity": null,
+      "id": "candidate_1",
+      "is_near_duplicate": false,
+      "relevance_score": 0,
+      "superseded_by": null,
+      "supersedes": null,
+      "text": "I prefer concise summaries.",
+      "value": null
+    },
+    {
+      "attribute": null,
+      "category": "preference",
+      "duplicate_of": "candidate_1",
+      "entity": null,
+      "id": "candidate_2",
+      "is_near_duplicate": true,
+      "relevance_score": 0,
+      "superseded_by": null,
+      "supersedes": null,
+      "text": "I prefer concise summary",
+      "value": null
+    },
+    {
+      "attribute": null,
+      "category": "project",
+      "duplicate_of": null,
+      "entity": null,
+      "id": "candidate_3",
+      "is_near_duplicate": false,
+      "relevance_score": 0,
+      "superseded_by": null,
+      "supersedes": null,
+      "text": "Project ChaseOS uses local-first runtime memory.",
+      "value": null
+    },
+    {
+      "attribute": null,
+      "category": "profile",
+      "duplicate_of": null,
+      "entity": null,
+      "id": "candidate_4",
+      "is_near_duplicate": false,
+      "relevance_score": 0,
+      "superseded_by": null,
+      "supersedes": null,
+      "text": "Profile: user is a systems builder.",
+      "value": null
+    },
+    {
+      "attribute": null,
+      "category": "goal",
+      "duplicate_of": null,
+      "entity": null,
+      "id": "candidate_5",
+      "is_near_duplicate": false,
+      "relevance_score": 0,
+      "superseded_by": null,
+      "supersedes": null,
+      "text": "Goal: ship Memory Intelligence Harness v0.1.",
+      "value": null
+    },
+    {
+      "attribute": "status",
+      "category": "entity",
+      "duplicate_of": null,
+      "entity": "OpenClaw",
+      "id": "candidate_6",
+      "is_near_duplicate": false,
+      "relevance_score": 0,
+      "superseded_by": "candidate_7",
+      "supersedes": null,
+      "text": "OpenClaw status is planned.",
+      "value": "planned"
+    },
+    {
+      "attribute": "status",
+      "category": "entity",
+      "duplicate_of": null,
+      "entity": "OpenClaw",
+      "id": "candidate_7",
+      "is_near_duplicate": false,
+      "relevance_score": 0,
+      "superseded_by": null,
+      "supersedes": "candidate_6",
+      "text": "OpenClaw status is active.",
+      "value": "active"
+    },
+    {
+      "attribute": null,
+      "category": "event",
+      "duplicate_of": null,
+      "entity": null,
+      "id": "candidate_8",
+      "is_near_duplicate": false,
+      "relevance_score": 0,
+      "superseded_by": null,
+      "supersedes": null,
+      "text": "On 2026-06-25 Hermes launched the bounded lane.",
+      "value": null
+    },
+    {
+      "attribute": null,
+      "category": "fact",
+      "duplicate_of": null,
+      "entity": null,
+      "id": "candidate_9",
+      "is_near_duplicate": false,
+      "relevance_score": 0,
+      "superseded_by": null,
+      "supersedes": null,
+      "text": "Fact: Python 3.11 is required.",
+      "value": null
+    },
+    {
+      "attribute": null,
+      "category": "request",
+      "duplicate_of": null,
+      "entity": null,
+      "id": "candidate_10",
+      "is_near_duplicate": false,
+      "relevance_score": 0,
+      "superseded_by": null,
+      "supersedes": null,
+      "text": "Please remember the Discord lane boundary.",
+      "value": null
+    },
+    {
+      "attribute": null,
+      "category": "general",
+      "duplicate_of": null,
+      "entity": null,
+      "id": "candidate_11",
+      "is_near_duplicate": false,
+      "relevance_score": 0,
+      "superseded_by": null,
+      "supersedes": null,
+      "text": "Random note without strong signals.",
+      "value": null
+    }
+  ],
+  "counts": {
+    "categories": {
+      "entity": 2,
+      "event": 1,
+      "fact": 1,
+      "general": 1,
+      "goal": 1,
+      "preference": 2,
+      "profile": 1,
+      "project": 1,
+      "request": 1
+    },
+    "near_duplicates": 1,
+    "superseded_claims": 1,
+    "total_candidates": 11
+  },
+  "retrieval_probe": [
+    {
+      "id": "candidate_5",
+      "score": 2
+    },
+    {
+      "id": "candidate_3",
+      "score": 1
+    }
+  ],
+  "schema_version": "memory-intelligence-eval.v0.1"
+}
