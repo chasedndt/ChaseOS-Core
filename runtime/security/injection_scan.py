@@ -66,8 +66,14 @@ class ScanResult:
 
 
 def _normalize(text: str) -> str:
-    """NFKC fold + strip zero-width so split-word evasions (i g n o r e) and
-    homoglyph/compatibility forms still match the patterns."""
+    """NFKC fold + strip zero-width/bidi so words split by *invisible* characters
+    (i<ZWSP>g<ZWSP>n<ZWSP>o<ZWSP>r<ZWSP>e) and homoglyph/compatibility forms still
+    match the patterns.
+
+    Note the limit: only characters in ``_OBFUSCATION_CHARS`` are removed. Words split
+    by ordinary whitespace ("i g n o r e") are NOT rejoined and will not match a
+    pattern — such text is still caught by quarantine and review, not by this scanner.
+    """
     stripped = "".join(ch for ch in text if ch not in _OBFUSCATION_CHARS)
     return unicodedata.normalize("NFKC", stripped)
 

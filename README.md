@@ -39,10 +39,11 @@ If you're evaluating the design, start with [`docs/ARCHITECTURE.md`](docs/ARCHIT
 
 | Doc | What it covers |
 |---|---|
+| **[Concepts — start here](docs/concepts/)** | **The 10 concepts in order, and what to defer** |
+| [Glossary](docs/concepts/Glossary.md) | Every ChaseOS term defined in one place |
 | [Architecture](docs/ARCHITECTURE.md) | Layer model, module map, decision-routing and connections flows (diagrams) |
 | [Decision records (ADRs)](docs/adr/) | Why the architecture is shaped the way it is |
 | [Quickstart](docs/getting-started/Quickstart.md) | Fork-first setup path |
-| [Core Operating Model](docs/concepts/Core-Operating-Model.md) | The seven canonical layers |
 | [Command Reference](docs/cli/Command-Reference.md) | Full CLI surface |
 | [Permission Matrix](kernel/PERMISSION_MATRIX.md) | Trust tiers and authority ceilings |
 | [Approval Center](docs/governance/Approval-Center.md) | Approval-gated write governance |
