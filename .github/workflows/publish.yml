@@ -1,0 +1,76 @@
+name: publish
+
+# Publishes to PyPI when a GitHub Release is published, so a release is a
+# deliberate act rather than a side effect of pushing to main.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Where to publish"
+        required: true
+        default: testpypi
+        type: choice
+        options: [testpypi, pypi]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build sdist and wheel
+        run: |
+          pip install build
+          python -m build
+
+      # A release that installs but cannot find its own manifests is worse than a
+      # failed release, so verify the artifact outside the source tree before upload.
+      - name: Verify the built wheel is usable
+        run: |
+          mkdir -p /tmp/verify
+          cd /tmp/verify
+          pip install "$GITHUB_WORKSPACE"/dist/*.whl
+          chaseos version
+          chaseos connections providers --json | python -c "import json,sys; n=len(json.load(sys.stdin)['result']); print(f'providers: {n}'); sys.exit(0 if n > 0 else 1)"
+          chaseos commerce catalog
+
+      - name: Check package metadata
+        run: |
+          pip install twine
+          twine check dist/*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    # Trusted Publishing (OIDC) — no API token stored in GitHub secrets.
+    permissions:
+      id-token: write
+    environment:
+      name: pypi
+      url: https://pypi.org/p/chaseos-core
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to TestPyPI
+        if: github.event_name == 'workflow_dispatch' && inputs.target == 'testpypi'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+      - name: Publish to PyPI
+        if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.target == 'pypi')
+        uses: pypa/gh-action-pypi-publish@release/v1

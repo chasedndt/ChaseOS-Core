@@ -47,6 +47,7 @@ If you're evaluating the design, start with [`docs/ARCHITECTURE.md`](docs/ARCHIT
 | [Approval Center](docs/governance/Approval-Center.md) | Approval-gated write governance |
 | [FORKING.md](FORKING.md) | What to keep standard vs. customize in a fork |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Dev setup, scope rules, PR expectations |
+| [Releasing](docs/RELEASING.md) | PyPI setup and how a release is cut |
 | [examples/](examples/) | Runnable scripts: use Core as a library in your own project |
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
 

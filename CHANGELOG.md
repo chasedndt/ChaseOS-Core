@@ -20,8 +20,27 @@ complete" means).
 - `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, this changelog, and `.github/` issue/PR templates
   and CI.
 
+- `examples/` — three runnable scripts (decision-route inspection, a custom
+  `GateProvider` registration, connection manifest loading) that execute in CI.
+- `ruff.toml` plus a CI lint gate scoped to defect-class rules, and a wheel-install CI job
+  that verifies packaged data files are present and usable outside the source tree.
+- `docs/RELEASING.md` and `.github/workflows/publish.yml` — PyPI publishing via Trusted
+  Publishing, with the built wheel verified before upload.
+
+### Fixed
+- **Packaging:** non-editable installs shipped no data files. `pip install chaseos-core`
+  outside a source checkout produced an empty provider list (reported as `ok`) and a
+  `CatalogError` from `chaseos commerce catalog`. All 14 YAML/JSON data files are now
+  declared as package data.
+- `chaseos doctor` reported a healthy vault for any directory containing a `.chaseos`
+  folder. It now names which marker matched and gives remediation when none does.
+- `07_LOGS/Agent-Activity/` is now git-ignored; without it a fork committed its own AOR
+  run records on first `chaseos run`.
+
 ### Changed
 - Expanded `runtime/cli/core_main.py` CLI surface for connections and decision routing.
+- README now states that `chaseos run` resolves to `escalated` in Core, because Core ships
+  no workflow manifests. It previously implied working workflow execution.
 - Relocated the internal Connections bootstrap handover note to
   `docs/runtime/Connections-Bootstrap-Notes.md` and de-referenced the local fork path
   placeholder it previously contained.
