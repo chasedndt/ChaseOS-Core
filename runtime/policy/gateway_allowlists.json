@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "updated": "2026-06-25",
+  "purpose": "Core-safe allowlist for gateway/Gate-sensitive local development surfaces. This file intentionally keeps Capture-to-Markdown local image text optional and local-only rather than mandatory in ChaseOS Core.",
+  "write_targets": {
+    "inputs_folder": [
+      "03_INPUTS/**"
+    ],
+    "runtime_activity": [
+      "07_LOGS/Agent-Activity/**"
+    ],
+    "operator_screenshots": [
+      "07_LOGS/Operator-Screenshots/**"
+    ]
+  },
+  "task_types": [
+    "capture.local_image_text",
+    "capture.markdown",
+    "repo.inspect",
+    "test.run"
+  ],
+  "external_apis": {
+    "capture.local_image_text": {
+      "description": "Optional Capture-to-Markdown local image text extraction for explicit operator-selected local PNG files. Extraction runs in-process or via repo-owned local command only, then writes extracted text through the normal quarantine capture path.",
+      "approval_gate": "operator-selected-local-file",
+      "credential_required": false,
+      "credential_reference_required": false,
+      "cloud_ocr_allowed": false,
+      "provider_call_allowed": false,
+      "ambient_screen_capture_allowed": false,
+      "active_window_capture_allowed": false,
+      "browser_profile_access_allowed": false,
+      "canonical_promotion_allowed": false,
+      "sic_ingestion_allowed_at_capture_time": false,
+      "allowed_write_targets": [
+        "inputs_folder"
+      ]
+    }
+  },
+  "control_plane_transports": {},
+  "credential_references": {
+    "allowed_kinds": [
+      "env-var",
+      "template-placeholder"
+    ],
+    "reference_only_state_keys": [
+      "credential_reference",
+      "token_reference"
+    ],
+    "secret_value_key_fragments": [
+      "api_key",
+      "client_secret",
+      "password",
+      "private_key",
+      "secret",
+      "token",
+      "webhook"
+    ]
+  }
+}

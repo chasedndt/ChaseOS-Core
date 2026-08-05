@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chaseos.dev/schemas/decision-contract.schema.json",
+  "title": "ChaseOS Decision Contract",
+  "type": "object",
+  "required": ["schema_version", "decision_id", "stakes", "canonical_writeback", "route"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "decision_id": {"type": "string", "minLength": 1},
+    "stakes": {"enum": ["low", "medium", "high", "critical"]},
+    "accountable_human": {"type": ["string", "null"]},
+    "canonical_writeback": {"enum": ["none", "proposal_only", "promote"]},
+    "route": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["step", "modality", "action_classes"],
+        "properties": {
+          "step": {"type": "string", "minLength": 1},
+          "modality": {"enum": ["human", "rules", "ml", "genai"]},
+          "action_classes": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "verifier": {"type": "string", "minLength": 1},
+          "nondeterminism_allowed": {"type": "boolean"},
+          "cost_ceiling_usd": {"type": "number", "minimum": 0},
+          "model_version": {"type": "string", "minLength": 1},
+          "evaluation_ref": {"type": "string", "minLength": 1},
+          "drift_status": {"enum": ["current", "warning", "blocked"]}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

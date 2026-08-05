@@ -1,0 +1,80 @@
+id: imessage_mac
+name: iMessage Mac Bridge
+category: local_messaging_bridge
+version: 0.1.0
+status: experimental
+connection_modes: [mac_local_bridge]
+supports:
+  control_plane: true
+  data_source: true
+  write_actions: true
+  sync: true
+  webhooks: false
+auth:
+  type: local_bridge
+  token_storage: macos_permissions
+  secret_fields: []
+ingress:
+  supported_modes: [local_bridge]
+  preferred_local_mode: mac_local_bridge
+  requires_public_https: false
+  notes: Reads a read-only snapshot of Messages chat.db through a Mac bridge watcher, then normalizes chats/messages/contacts/attachments into Chase events.
+egress:
+  can_send_messages: true
+  can_send_media: false
+  draft_first_mode_required: true
+  notes: Sending routes through Messages automation and must remain draft/approval-first.
+permissions:
+  profiles:
+    read_only:
+      description: Read owner-approved Messages threads from local Mac bridge snapshots.
+      capabilities: [imessage_mac.read_threads, imessage_mac.read_message_context]
+    assist:
+      description: Read selected threads plus draft iMessage/SMS replies.
+      capabilities: [imessage_mac.read_threads, imessage_mac.read_message_context, imessage_mac.draft_message]
+    action_confirmed:
+      description: Send only through approved Messages automation.
+      capabilities: [imessage_mac.send_message_confirmed]
+capabilities:
+  - tool_name: imessage_mac.read_threads
+    action_type: read
+    safety_level: safe
+    enabled_by_default: false
+    description: Read owner-approved Messages threads from a read-only chat.db snapshot.
+  - tool_name: imessage_mac.read_message_context
+    action_type: read
+    safety_level: safe
+    enabled_by_default: false
+    description: Read surrounding context for an approved thread/message GUID.
+  - tool_name: imessage_mac.draft_message
+    action_type: draft
+    safety_level: safe
+    enabled_by_default: false
+    description: Draft an iMessage/SMS/RCS reply without sending.
+  - tool_name: imessage_mac.send_message_confirmed
+    action_type: external_egress
+    safety_level: approval_required
+    enabled_by_default: false
+    description: Send through Messages automation only after approval.
+safety:
+  default_profile: read_only
+  external_egress: gated
+  owner_only: true
+  thread_allowlist_required: true
+  macos_full_disk_access_required_for_read: true
+  macos_automation_required_for_send: true
+  source_retention_days_default: 30
+sync:
+  modes: [incremental, watch, polling_fallback]
+  cursor_type: message_guid_or_rowid
+normalization:
+  item_types: [message, chat, contact, attachment]
+memory:
+  can_write_source_items: true
+  can_extract_entities: true
+  default_retention: restricted
+  pii_sensitive: true
+deployment:
+  requires_mac_bridge_host: true
+  requires_public_ingress_relay: false
+  production_safe: private_owner_only

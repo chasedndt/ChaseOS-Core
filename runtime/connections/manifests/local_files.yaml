@@ -1,0 +1,57 @@
+id: local_files
+name: Local Files
+category: local_data
+version: 0.1.0
+status: alpha
+supports:
+  control_plane: false
+  data_source: true
+  write_actions: true
+  sync: true
+  webhooks: false
+auth:
+  type: none
+  token_storage: none
+permissions:
+  profiles:
+    read_only:
+      description: Read/search explicitly allowlisted roots only.
+      capabilities: [local_files.search, local_files.read]
+    assist:
+      description: Read/search and draft write patches only.
+      capabilities: [local_files.search, local_files.read, local_files.draft_patch]
+    action_confirmed:
+      description: Read/search and apply writes only after diff approval.
+      capabilities: [local_files.search, local_files.read, local_files.draft_patch, local_files.write_confirmed]
+capabilities:
+  - tool_name: local_files.search
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Search approved local roots with allow/deny globs.
+  - tool_name: local_files.read
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Read files inside approved local roots.
+  - tool_name: local_files.draft_patch
+    action_type: draft
+    safety_level: safe
+    enabled_by_default: false
+    description: Produce a diff preview without writing.
+  - tool_name: local_files.write_confirmed
+    action_type: write
+    safety_level: approval_required
+    enabled_by_default: false
+    description: Apply approved writes inside allowlisted roots only.
+safety:
+  default_profile: read_only
+  external_egress: gated
+  private_channel_access: opt_in
+  dm_access: opt_in
+  source_retention_days_default: 90
+  redacts_secrets: true
+sync:
+  modes: [incremental, backfill, watch]
+normalization:
+  item_types: [file, repo_file, doc]

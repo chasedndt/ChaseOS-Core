@@ -148,6 +148,49 @@ def cmd_run(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_decision_route_inspect(args: argparse.Namespace) -> int:
+    """Inspect a decision contract without dispatching work or consuming approval."""
+    from runtime.decision_router import (
+        DecisionContractError,
+        inspect_decision_contract,
+        load_decision_contract,
+    )
+
+    try:
+        contract = load_decision_contract(args.path)
+        result = inspect_decision_contract(contract)
+    except DecisionContractError as exc:
+        if getattr(args, "output_json", False):
+            print(json.dumps({
+                "ok": False,
+                "action": "decision-route.inspect",
+                "result": None,
+                "errors": [str(exc)],
+                "warnings": [],
+            }, indent=2))
+        else:
+            print(f"decision route: invalid contract — {exc}", file=sys.stderr)
+        return 2
+
+    if getattr(args, "output_json", False):
+        print(json.dumps({
+            "ok": result["ok"],
+            "action": "decision-route.inspect",
+            "result": result,
+            "errors": result["violations"],
+            "warnings": [],
+        }, indent=2, default=str))
+    else:
+        print(
+            f"decision route {result['decision_id']}: status={result['status']} "
+            f"modalities={','.join(result['required_modalities'])} "
+            f"approval_required={result['approval_plan']['required']}"
+        )
+        for violation in result["violations"]:
+            print(f"  BLOCK {violation['code']}: {violation['message']}")
+    return 0 if result["ok"] else 2
+
+
 def cmd_schedule_list(args: argparse.Namespace) -> int:
     from runtime.schedules.loader import list_schedules
     items = list_schedules(_resolve_vault(getattr(args, "vault_root", None)))
@@ -193,6 +236,115 @@ def cmd_capture_stdin(args: argparse.Namespace) -> int:
     return _do_capture(args, None)
 
 
+def cmd_capture_image_text(args: argparse.Namespace) -> int:
+    from runtime.capture.visual_capture.image_text import capture_local_image_text
+
+    res = capture_local_image_text(
+        args.path,
+        vault_root=_resolve_vault(getattr(args, "vault_root", None)),
+        title=args.title or Path(args.path).stem,
+        input_class=getattr(args, "input_class", "source"),
+        source_platform=getattr(args, "source", "local-image-text"),
+        domain_hint=getattr(args, "domain", None),
+        project_hint=getattr(args, "project", None),
+        topic_hint=getattr(args, "topic", None),
+        origin_kind=getattr(args, "origin_kind", None),
+    )
+    if getattr(args, "output_json", False):
+        return _emit(args, "capture.image_text", res)
+    if res.get("is_duplicate"):
+        print("capture image-text: duplicate extracted text (SHA already known) — not written")
+    else:
+        print(f"captured image text: {res.get('content_path') or res.get('capture_id') or 'ok'}")
+    return 0
+
+
+def cmd_capture_image_text_status(args: argparse.Namespace) -> int:
+    from runtime.capture.visual_capture.image_text import build_local_image_text_status
+
+    res = build_local_image_text_status()
+    if getattr(args, "output_json", False):
+        return _emit(args, "capture.image_text.status", res)
+    engine = res.get("engine", {})
+    print(
+        "capture image-text status: "
+        f"engine={engine.get('engine_id')} available={engine.get('available')} "
+        "cloud_ocr_allowed=False provider_call_allowed=False"
+    )
+    return 0
+
+
+# ── connections ──────────────────────────────────────────────────────────────────
+def cmd_connections_providers(args: argparse.Namespace) -> int:
+    from runtime.connections import list_provider_manifests
+
+    providers = [manifest.to_dict() for manifest in list_provider_manifests()]
+    if getattr(args, "output_json", False):
+        return _emit(args, "connections.providers", providers)
+    print(f"ChaseOS connection providers ({len(providers)}):")
+    for provider in providers:
+        caps = provider.get("capabilities", [])
+        print(
+            f"  {provider.get('id')}: {provider.get('name')} "
+            f"status={provider.get('status')} default={provider.get('safety', {}).get('default_profile', 'read_only')} "
+            f"capabilities={len(caps)}"
+        )
+    return 0
+
+
+def cmd_connections_list(args: argparse.Namespace) -> int:
+    from runtime.connections import registry_overview
+
+    vault = _resolve_vault(getattr(args, "vault_root", None))
+    overview = registry_overview(vault)
+    if getattr(args, "output_json", False):
+        return _emit(args, "connections.list", overview)
+    print(f"ChaseOS Connections registry: db={overview['db_path']} exists={overview['db_exists']}")
+    print(f"  providers_available={len(overview['available_providers'])} connections={len(overview['connections'])}")
+    for conn in overview["connections"]:
+        print(
+            f"  {conn['id']} provider={conn['provider']} status={conn['status']} "
+            f"profile={conn['permission_profile']} updated={conn['updated_at']}"
+        )
+    return 0
+
+
+def cmd_connections_init(args: argparse.Namespace) -> int:
+    from runtime.connections.store import db_path_for_vault, init_store
+
+    vault = _resolve_vault(getattr(args, "vault_root", None))
+    result = init_store(db_path_for_vault(vault))
+    if getattr(args, "output_json", False):
+        return _emit(args, "connections.init", result)
+    print(
+        "ChaseOS Connections store initialized: "
+        f"db={result['db_path']} schema={result['schema_version']} tables={result['table_count']}"
+    )
+    return 0
+
+
+def cmd_connections_seed(args: argparse.Namespace) -> int:
+    from runtime.connections import load_manifest
+    from runtime.connections.store import db_path_for_vault, init_store, seed_manifest_connection
+
+    vault = _resolve_vault(getattr(args, "vault_root", None))
+    db_path = db_path_for_vault(vault)
+    init_store(db_path)
+    manifest = load_manifest(args.provider)
+    connection_id = seed_manifest_connection(
+        db_path,
+        manifest,
+        owner_user_id=getattr(args, "owner_user_id", None) or "local_operator",
+        status="disconnected",
+    )
+    payload = {"connection_id": connection_id, "provider": manifest.id, "db_path": str(db_path)}
+    if getattr(args, "output_json", False):
+        return _emit(args, "connections.seed", payload)
+    print(f"seeded disconnected {manifest.id} connection: {connection_id}")
+    return 0
+
+
+# ── parser ───────────────────────────────────────────────────────────────────────
 def _add_capture_args(sp: argparse.ArgumentParser) -> None:
     sp.add_argument("--class", dest="input_class", default="source", help="Input class (default: source)")
     sp.add_argument("--source", default="cli", help="Short source platform id (default: cli)")
@@ -245,6 +397,17 @@ def build_core_parser() -> argparse.ArgumentParser:
     sp.add_argument("--json", action="store_true", dest="output_json")
     sp.set_defaults(func=cmd_run)
 
+    decision = sub.add_parser(
+        "decision-route",
+        help="Inspect decision modality and approval requirements (read-only)",
+    )
+    decision_sub = decision.add_subparsers(dest="decision_route_mode", metavar="MODE")
+    decision_sub.required = True
+    s = decision_sub.add_parser("inspect", help="Validate and inspect a JSON decision contract")
+    s.add_argument("path", metavar="CONTRACT_JSON")
+    s.add_argument("--json", action="store_true", dest="output_json")
+    s.set_defaults(func=cmd_decision_route_inspect)
+
     cap = sub.add_parser("capture", help="Capture content into quarantine intake")
     cap_sub = cap.add_subparsers(dest="capture_mode", metavar="MODE")
     cap_sub.required = True
@@ -252,6 +415,13 @@ def build_core_parser() -> argparse.ArgumentParser:
     s.add_argument("path", metavar="PATH"); _add_capture_args(s); s.set_defaults(func=cmd_capture_file)
     s = cap_sub.add_parser("stdin", help="Capture from stdin")
     _add_capture_args(s); s.set_defaults(func=cmd_capture_stdin)
+    img = cap_sub.add_parser("image-text", help="Extract text from an explicit local PNG image and capture it")
+    img.add_argument("path", metavar="PATH")
+    _add_capture_args(img)
+    img.set_defaults(func=cmd_capture_image_text)
+    s = cap_sub.add_parser("image-text-status", help="Show local image text engine posture")
+    s.add_argument("--json", action="store_true", dest="output_json")
+    s.set_defaults(func=cmd_capture_image_text_status)
 
     sch = sub.add_parser("schedule", help="Native schedule intents")
     sch_sub = sch.add_subparsers(dest="schedule_mode", metavar="MODE")
@@ -259,6 +429,23 @@ def build_core_parser() -> argparse.ArgumentParser:
     s = sch_sub.add_parser("list", help="List schedule intents")
     s.add_argument("--vault-root", default=None, metavar="PATH")
     s.add_argument("--json", action="store_true", dest="output_json"); s.set_defaults(func=cmd_schedule_list)
+
+    conn = sub.add_parser("connections", help="Connection registry and provider manifests")
+    conn_sub = conn.add_subparsers(dest="connections_mode", metavar="MODE")
+    conn_sub.required = True
+    s = conn_sub.add_parser("providers", help="List bundled provider manifests")
+    s.add_argument("--json", action="store_true", dest="output_json"); s.set_defaults(func=cmd_connections_providers)
+    s = conn_sub.add_parser("list", help="List local connection records and available providers")
+    s.add_argument("--vault-root", default=None, metavar="PATH")
+    s.add_argument("--json", action="store_true", dest="output_json"); s.set_defaults(func=cmd_connections_list)
+    s = conn_sub.add_parser("init", help="Create the local-first Connections SQLite registry")
+    s.add_argument("--vault-root", default=None, metavar="PATH")
+    s.add_argument("--json", action="store_true", dest="output_json"); s.set_defaults(func=cmd_connections_init)
+    s = conn_sub.add_parser("seed", help="Seed a disconnected placeholder connection from a provider manifest")
+    s.add_argument("provider", metavar="PROVIDER")
+    s.add_argument("--owner-user-id", default="local_operator")
+    s.add_argument("--vault-root", default=None, metavar="PATH")
+    s.add_argument("--json", action="store_true", dest="output_json"); s.set_defaults(func=cmd_connections_seed)
 
     return p
 

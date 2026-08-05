@@ -20,7 +20,7 @@ source: Synthesized from 06_AGENTS/Permission-Matrix.md v1.3, Trust-Tiers.md v1.
 
 | Runtime | Identity | Trust Tier | Execution Surface | Status |
 |---|---|---|---|---|
-| Claude Code (Archon) | Archon-Runtime-Profile | Tier 2 | CLI / direct session | Active |
+| Claude Code (example developer runtime) | Developer-Runtime-Profile.example | Tier 2 | CLI / direct session | Active example |
 | OpenClaw | OpenClaw-Runtime-Profile | Tier 2 | Schedule executor + Discord ingress | Active |
 | Hermes | Hermes-Runtime-Profile | Tier 2 (bounded shadow) | Bus watch + review + synthesis | Active |
 | Claude Chat (claude.ai) | Advisory surface | Tier 3 | Chat — advisory only | Active |
@@ -37,7 +37,7 @@ source: Synthesized from 06_AGENTS/Permission-Matrix.md v1.3, Trust-Tiers.md v1.
 
 | Runtime | Vault Files | Protected Files | Raw Inputs (03_INPUTS/) | External |
 |---|---|---|---|---|
-| Archon (Claude Code) | ✅ All | ✅ Read-only | ✅ Data only | ⚠️ Explicit scope |
+| Claude Code / Developer Runtime | ✅ All | ✅ Read-only | ✅ Data only | ⚠️ Explicit scope |
 | OpenClaw | ⚠️ Workflow-declared only | ❌ | ❌ | ⚠️ Connector-only |
 | Hermes | ⚠️ Manifest-declared only | ❌ | ❌ in current shadow | ❌ in current shadow |
 | Claude Chat | ✅ User-provided only | ✅ User-provided only | ✅ Data only | ⚠️ Web search if enabled |
@@ -51,7 +51,7 @@ source: Synthesized from 06_AGENTS/Permission-Matrix.md v1.3, Trust-Tiers.md v1.
 
 | Runtime | Standard Logs | Operator Briefs | Acquisition Packs | Canonical Knowledge | Protected Files | Vault-Wide |
 |---|---|---|---|---|---|---|
-| Archon (Claude Code) | ✅ | ✅ | ✅ | ✅ (with direction) | ⚠️ Per-file approval | ⚠️ With direction |
+| Claude Code / Developer Runtime | ✅ | ✅ | ✅ | ✅ (with direction) | ⚠️ Per-file approval | ⚠️ With direction |
 | OpenClaw | ✅ (declared targets) | ✅ | ✅ | ❌ | ❌ | ❌ |
 | Hermes | ✅ (Agent-Activity only) | ✅ (drafts only) | ❌ | ❌ | ❌ | ❌ |
 | MCP Server | ✅ (AOR-bounded) | ✅ (operator_today/close_day only) | ❌ | ❌ | ❌ | ❌ |
@@ -73,7 +73,7 @@ source: Synthesized from 06_AGENTS/Permission-Matrix.md v1.3, Trust-Tiers.md v1.
 | Discord webhook | OpenClaw (sbp_example_digest) | example-project_DISCORD_WEBHOOK_URL (env) | None declared | If enabled + key set |
 | Whop API | OpenClaw (SBP pipelines) | WHOP_API_KEY (env) | None declared | Not yet active |
 | n8n webhook / MCP | n8n executor | N8N_BASE_URL + N8N_API_KEY (env) | Policy gate (enabled + secrets_configured) | If configured |
-| Browser navigation | Archon / browser_research | None | Bounded URL allowlist | Allowed |
+| Browser navigation | Developer Runtime / browser_research | None | Bounded URL allowlist | Allowed |
 | Host process control | OpenClaw / lifecycle | None | Bounded local process only | Allowed |
 | Host startup folder | OpenClaw / lifecycle | None | **No per-action approval — RISK H-2** | Allowed |
 
@@ -126,8 +126,8 @@ source: Synthesized from 06_AGENTS/Permission-Matrix.md v1.3, Trust-Tiers.md v1.
 
 | Action | Ruling | Applies To |
 |---|---|---|
-| Delete vault files | ⚠️ Explicit per-file instruction | Archon (Claude Code) only; ❌ all other runtimes |
-| Edit protected files | ⚠️ Explicit per-file approval per session | Archon only; ❌ all others |
+| Delete vault files | ⚠️ Explicit per-file instruction | Developer Runtime only; ❌ all other runtimes |
+| Edit protected files | ⚠️ Explicit per-file approval per session | Developer Runtime only; ❌ all others |
 | Promote to 02_KNOWLEDGE/ (Hermes/OpenClaw) | ❌ Never autonomous | Hermes, OpenClaw, all automated runtimes |
 | Execute shell/scripts (Hermes) | ❌ Never | Hermes |
 | Multi-repo access | ❌ Disabled by default | All runtimes |
@@ -135,7 +135,7 @@ source: Synthesized from 06_AGENTS/Permission-Matrix.md v1.3, Trust-Tiers.md v1.
 | Run without audit log | ❌ Never | All runtimes |
 | Undeclared file reads (Hermes) | ❌ Never — halt + escalation | Hermes |
 | Auto-promote quarantine skills | ❌ Never without operator review | Hermes |
-| Commit / push to git repo | ❌ Not documented — treat as ⚠️ explicit instruction per op | Archon; ❌ all automated runtimes |
+| Commit / push to git repo | ❌ Not documented — treat as ⚠️ explicit instruction per op | Developer Runtime; ❌ all automated runtimes |
 | Force-push to main | ❌ Prohibited | All runtimes |
 | Approval self-escalation | ❌ Never | All runtimes |
 

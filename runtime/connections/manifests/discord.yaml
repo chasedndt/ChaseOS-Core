@@ -1,0 +1,65 @@
+id: discord
+name: Discord
+category: communication
+version: 0.1.0
+status: alpha
+connection_modes: [bot_gateway, webhook, local_gateway]
+supports:
+  control_plane: true
+  data_source: true
+  write_actions: true
+  sync: true
+  webhooks: true
+auth:
+  type: bot_or_gateway_binding
+  token_storage: os_keychain_or_vault
+permissions:
+  profiles:
+    read_only:
+      description: Read approved channels/threads and render citations.
+      capabilities: [discord.read_channel_history, discord.read_thread, discord.get_user]
+    assist:
+      description: Read plus draft replies/status cards.
+      capabilities: [discord.read_channel_history, discord.draft_message]
+    action_confirmed:
+      description: Send messages only through approval-gated control-plane cards.
+      capabilities: [discord.send_message_confirmed]
+    action_allowlisted:
+      description: Post autonomous digests only in explicitly allowlisted output channels.
+      capabilities: [discord.send_message_allowlisted]
+capabilities:
+  - tool_name: discord.read_channel_history
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Read explicitly approved Discord channel history.
+  - tool_name: discord.read_thread
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Read one approved thread with message IDs and timestamps.
+  - tool_name: discord.draft_message
+    action_type: draft
+    safety_level: safe
+    enabled_by_default: false
+    description: Draft a Discord response without sending.
+  - tool_name: discord.send_message_confirmed
+    action_type: external_egress
+    safety_level: approval_required
+    enabled_by_default: false
+    description: Send a Discord message after approval.
+  - tool_name: discord.send_message_allowlisted
+    action_type: external_egress
+    safety_level: restricted
+    enabled_by_default: false
+    description: Post only to allowlisted output lanes/workflows.
+safety:
+  default_profile: read_only
+  external_egress: gated
+  private_channel_access: opt_in
+  dm_access: opt_in
+  source_retention_days_default: 90
+sync:
+  modes: [incremental, backfill, webhook]
+normalization:
+  item_types: [message, thread, attachment, user, channel]

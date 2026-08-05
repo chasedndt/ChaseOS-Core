@@ -8,7 +8,7 @@ This public command reference is intentionally compact. Generated/private comman
 |---|---|---|
 | `doctor` | Validate environment and config posture | read-only |
 | `core-export` | Build/verify sanitized Core export previews | dry-run first |
-| `capture` | Ingest external material | private instance only by default |
+| `capture` | Ingest explicit text/file material, including optional local PNG image-text extraction | quarantine-only; local-only image text; no cloud OCR/provider/canonical promotion |
 | `intake` | Inspect quarantine/input metadata | private instance only by default |
 | `run` | Execute governed workflows | approval-gated |
 | `studio` | Inspect local UI/readiness surfaces | read-only unless explicitly approved |

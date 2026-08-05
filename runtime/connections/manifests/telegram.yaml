@@ -1,0 +1,74 @@
+id: telegram
+name: Telegram
+category: communication
+version: 0.1.0
+status: alpha
+connection_modes: [bot_api_long_polling, webhook]
+supports:
+  control_plane: true
+  data_source: true
+  write_actions: true
+  sync: true
+  webhooks: true
+auth:
+  type: bot_token
+  token_storage: os_keychain_or_vault
+  secret_fields: [bot_token]
+ingress:
+  supported_modes: [long_polling, webhook]
+  preferred_local_mode: long_polling
+  requires_public_https_for: [webhook]
+  notes: Long polling is preferred for local-first ChaseOS runtimes behind NAT.
+egress:
+  can_send_messages: true
+  can_edit_messages: true
+  can_send_media: true
+permissions:
+  profiles:
+    read_only:
+      description: Read approved Telegram updates already visible to the bot.
+      capabilities: [telegram.read_updates, telegram.read_chat_context]
+    assist:
+      description: Read plus draft replies in owner-approved chats.
+      capabilities: [telegram.read_updates, telegram.draft_message]
+    action_confirmed:
+      description: Send Telegram messages only after approval preview.
+      capabilities: [telegram.send_message_confirmed]
+capabilities:
+  - tool_name: telegram.read_updates
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Read updates captured by long polling/webhook with update_id cursor.
+  - tool_name: telegram.read_chat_context
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Read locally persisted context for approved Telegram chats.
+  - tool_name: telegram.draft_message
+    action_type: draft
+    safety_level: safe
+    enabled_by_default: false
+    description: Draft a Telegram reply without sending.
+  - tool_name: telegram.send_message_confirmed
+    action_type: external_egress
+    safety_level: approval_required
+    enabled_by_default: false
+    description: Send a Telegram message after human approval.
+safety:
+  default_profile: read_only
+  external_egress: gated
+  dm_access: opt_in
+  group_access: opt_in
+  group_privacy_mode_requires_admin_or_disable_privacy: true
+  source_retention_days_default: 90
+sync:
+  modes: [incremental]
+  cursor_type: update_id
+  supports_history_backfill: false
+normalization:
+  item_types: [message, command, media, user, chat]
+memory:
+  can_write_source_items: true
+  can_extract_entities: true
+  default_retention: local_only

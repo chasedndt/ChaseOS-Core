@@ -369,7 +369,7 @@ def _known_agent_bus_names(vault_root: Path) -> set[str]:
 
         return set(get_known_runtimes(vault_root))
     except Exception:
-        return {"Archon", "Codex", "Hermes", "OpenClaw"}
+        return {"Claude Code", "Codex", "Hermes", "OpenClaw"}
 
 
 def _validate_agent_bus_task_packet_preview(packet: Mapping[str, Any]) -> list[str]:

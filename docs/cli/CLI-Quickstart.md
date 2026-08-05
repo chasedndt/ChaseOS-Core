@@ -17,9 +17,11 @@ Commands should support:
 ```bash
 chaseos --help
 chaseos doctor --json
-chaseos core-export build --dry-run --json
-chaseos core-export verify-report --json
+chaseos capture image-text-status --json
+chaseos capture image-text ./explicit-local-screenshot.png --title "Screenshot text" --vault-root . --json
 ```
+
+`capture image-text` is optional Core functionality: it reads only an explicit local PNG, runs the repo-owned local image text engine, and writes extracted text through the normal quarantine capture path. It does not enable cloud OCR, provider calls, ambient screen capture, browser-profile access, SIC ingestion, or canonical promotion.
 
 ## Rule
 

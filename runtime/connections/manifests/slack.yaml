@@ -1,0 +1,62 @@
+id: slack
+name: Slack
+category: communication
+version: 0.1.0
+status: alpha
+connection_modes: [oauth_remote_mcp, direct_api, webhook]
+supports:
+  control_plane: true
+  data_source: true
+  write_actions: true
+  sync: true
+  webhooks: true
+auth:
+  type: oauth2_pkce
+  token_storage: os_keychain_or_vault
+permissions:
+  profiles:
+    read_only:
+      description: Search/read approved channels and threads only.
+      capabilities: [slack.search_messages, slack.read_channel_history, slack.read_thread, slack.get_user]
+    assist:
+      description: Read plus draft messages, no sending.
+      capabilities: [slack.search_messages, slack.read_channel_history, slack.draft_message]
+    action_confirmed:
+      description: Send messages only after approval preview.
+      capabilities: [slack.send_message_confirmed]
+capabilities:
+  - tool_name: slack.search_messages
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Search approved Slack message history.
+  - tool_name: slack.read_channel_history
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Read selected channel history.
+  - tool_name: slack.read_thread
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Read one Slack thread with provenance.
+  - tool_name: slack.draft_message
+    action_type: draft
+    safety_level: safe
+    enabled_by_default: false
+    description: Draft a Slack reply without sending.
+  - tool_name: slack.send_message_confirmed
+    action_type: external_egress
+    safety_level: approval_required
+    enabled_by_default: false
+    description: Send a Slack message after human approval.
+safety:
+  default_profile: read_only
+  external_egress: gated
+  private_channel_access: opt_in
+  dm_access: opt_in
+  source_retention_days_default: 90
+sync:
+  modes: [incremental, backfill, webhook]
+normalization:
+  item_types: [message, thread, file, canvas, user]

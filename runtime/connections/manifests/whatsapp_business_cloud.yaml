@@ -1,0 +1,74 @@
+id: whatsapp_business_cloud
+name: WhatsApp Business Cloud
+category: business_messaging
+version: 0.1.0
+status: alpha
+connection_modes: [cloud_api_webhook]
+supports:
+  control_plane: true
+  data_source: true
+  write_actions: true
+  sync: false
+  webhooks: true
+auth:
+  type: oauth_or_system_token
+  token_storage: os_keychain_or_vault
+  secret_fields: [access_token, app_secret, verify_token, phone_number_id, waba_id]
+ingress:
+  supported_modes: [webhook]
+  requires_public_https: true
+  preferred_local_mode: ingress_relay
+  notes: Official Cloud API receives events through Meta webhooks and sends through Graph API.
+egress:
+  can_send_messages: true
+  requires_24h_window_for_freeform: true
+  requires_templates_outside_window: true
+  requires_opt_in: true
+permissions:
+  profiles:
+    read_only:
+      description: Read webhook events and business inbox metadata only.
+      capabilities: [whatsapp_business.read_webhook_events]
+    assist:
+      description: Read plus draft business replies/templates.
+      capabilities: [whatsapp_business.read_webhook_events, whatsapp_business.draft_message]
+    action_confirmed:
+      description: Send approved messages/templates within WhatsApp Business policy.
+      capabilities: [whatsapp_business.send_message_confirmed]
+capabilities:
+  - tool_name: whatsapp_business.read_webhook_events
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Read verified webhook events from the WhatsApp Business Cloud API.
+  - tool_name: whatsapp_business.draft_message
+    action_type: draft
+    safety_level: safe
+    enabled_by_default: false
+    description: Draft a WhatsApp Business response/template without sending.
+  - tool_name: whatsapp_business.send_message_confirmed
+    action_type: external_egress
+    safety_level: approval_required
+    enabled_by_default: false
+    description: Send an approved WhatsApp Business message subject to opt-in and template/window rules.
+safety:
+  default_profile: read_only
+  external_egress: gated
+  pii_sensitive: true
+  requires_opt_in: true
+  private_chat_access: restricted
+  source_retention_days_default: 30
+sync:
+  modes: [webhook]
+  cursor_type: webhook_event_id
+  supports_history_backfill: false
+normalization:
+  item_types: [message, media, contact, business_profile, delivery_status]
+memory:
+  can_write_source_items: true
+  can_extract_entities: true
+  default_retention: restricted
+  pii_sensitive: true
+deployment:
+  requires_public_ingress_relay: true
+  production_safe: true

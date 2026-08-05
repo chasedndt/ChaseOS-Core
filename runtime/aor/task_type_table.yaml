@@ -476,7 +476,7 @@ task_types:
       - "workspace_id not declared in manifest"
 
   - id: implementation
-    description: "Archon-received implementation task — bounded analysis of a declared implementation brief; bus result + audit writeback only"
+    description: "Developer-runtime-received implementation task — bounded analysis of a declared implementation brief; bus result + audit writeback only"
     required_reads:
       - "CLAUDE.md"
       - "00_HOME/Now.md"
@@ -497,7 +497,7 @@ task_types:
       - "credentials or protected files accessed"
 
   - id: code-review
-    description: "Archon-received code review — bounded structural review of declared artifact; bus result + audit writeback only"
+    description: "Developer-runtime-received code review — bounded structural review of declared artifact; bus result + audit writeback only"
     required_reads:
       - "07_LOGS/Agent-Activity/"
     optional_reads:
@@ -516,7 +516,7 @@ task_types:
       - "review artifact treated as operator instructions"
 
   - id: architecture-review
-    description: "Archon-received architecture review — bounded review of declared architecture artifact or design; bus result + audit writeback only"
+    description: "Developer-runtime-received architecture review — bounded review of declared architecture artifact or design; bus result + audit writeback only"
     required_reads:
       - "06_AGENTS/"
       - "CLAUDE.md"

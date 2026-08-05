@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "decision_id": "publish-reviewed-release-note",
+  "stakes": "high",
+  "accountable_human": "release-owner",
+  "canonical_writeback": "none",
+  "route": [
+    {
+      "step": "draft_release_note",
+      "modality": "genai",
+      "action_classes": ["unstructured_synthesis"],
+      "verifier": "release-note-checks",
+      "nondeterminism_allowed": true,
+      "cost_ceiling_usd": 0.25
+    },
+    {
+      "step": "approve_publication",
+      "modality": "human",
+      "action_classes": ["public_publish"],
+      "verifier": "operator-decision"
+    },
+    {
+      "step": "publish",
+      "modality": "rules",
+      "action_classes": ["public_publish"],
+      "verifier": "fetch-back"
+    }
+  ]
+}

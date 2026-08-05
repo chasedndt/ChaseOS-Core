@@ -1,0 +1,78 @@
+id: whatsapp_personal_lab
+name: WhatsApp Personal Lab
+category: communication_lab
+version: 0.1.0
+status: experimental
+connection_modes: [local_bridge]
+supports:
+  control_plane: true
+  data_source: true
+  write_actions: true
+  sync: true
+  webhooks: false
+auth:
+  type: local_bridge
+  token_storage: local_bridge_session
+  secret_fields: []
+ingress:
+  supported_modes: [local_bridge]
+  preferred_local_mode: local_bridge
+  requires_public_https: false
+  notes: Private/lab adapter for owner-controlled local bridge sessions; not a production WhatsApp product connector.
+egress:
+  can_send_messages: true
+  can_send_media: true
+  draft_first_mode_required: true
+permissions:
+  profiles:
+    read_only:
+      description: Read selected locally cached chats only.
+      capabilities: [whatsapp_lab.search_chats, whatsapp_lab.read_message_context]
+    assist:
+      description: Read selected chats plus draft replies.
+      capabilities: [whatsapp_lab.search_chats, whatsapp_lab.read_message_context, whatsapp_lab.draft_message]
+    action_confirmed:
+      description: Send only after owner approval.
+      capabilities: [whatsapp_lab.send_message_confirmed]
+capabilities:
+  - tool_name: whatsapp_lab.search_chats
+    action_type: read
+    safety_level: safe
+    enabled_by_default: false
+    description: Search owner-approved local WhatsApp bridge cache.
+  - tool_name: whatsapp_lab.read_message_context
+    action_type: read
+    safety_level: safe
+    enabled_by_default: false
+    description: Read surrounding message context for selected local chats.
+  - tool_name: whatsapp_lab.draft_message
+    action_type: draft
+    safety_level: safe
+    enabled_by_default: false
+    description: Draft a local WhatsApp reply without sending.
+  - tool_name: whatsapp_lab.send_message_confirmed
+    action_type: external_egress
+    safety_level: approval_required
+    enabled_by_default: false
+    description: Send a local WhatsApp message only after owner approval.
+safety:
+  default_profile: read_only
+  external_egress: gated
+  owner_only: true
+  lab_flag_required: CHASE_ENABLE_PERSONAL_WHATSAPP_LAB
+  production_safe: false
+  private_chat_access: opt_in
+  source_retention_days_default: 30
+sync:
+  modes: [incremental, local_cache]
+  cursor_type: local_message_id
+normalization:
+  item_types: [message, chat, contact, attachment]
+memory:
+  can_write_source_items: true
+  can_extract_entities: true
+  default_retention: restricted
+  pii_sensitive: true
+deployment:
+  requires_public_ingress_relay: false
+  production_safe: false

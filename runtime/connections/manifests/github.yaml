@@ -1,0 +1,61 @@
+id: github
+name: GitHub
+category: development
+version: 0.1.0
+status: alpha
+connection_modes: [oauth, github_app, remote_mcp]
+supports:
+  control_plane: false
+  data_source: true
+  write_actions: true
+  sync: true
+  webhooks: true
+auth:
+  type: oauth_or_github_app
+  token_storage: os_keychain_or_vault
+permissions:
+  profiles:
+    read_only:
+      description: Search/read selected repositories, issues, PRs, workflow runs.
+      capabilities: [github.search_code, github.get_file_contents, github.list_issues, github.read_pull_request]
+    assist:
+      description: Read plus draft issues/branches/PRs, no live writes.
+      capabilities: [github.search_code, github.get_file_contents, github.draft_issue, github.draft_pull_request]
+    action_confirmed:
+      description: Create issues/branches/PRs after explicit approval; no merge/delete.
+      capabilities: [github.create_issue_confirmed, github.create_branch_confirmed, github.create_pull_request_confirmed]
+capabilities:
+  - tool_name: github.search_code
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Search code in selected repositories.
+  - tool_name: github.get_file_contents
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Fetch file contents from selected repositories.
+  - tool_name: github.read_pull_request
+    action_type: read
+    safety_level: safe
+    enabled_by_default: true
+    description: Read PR metadata, diffs, and checks.
+  - tool_name: github.create_issue_confirmed
+    action_type: write
+    safety_level: approval_required
+    enabled_by_default: false
+    description: Create an issue only after approval preview.
+  - tool_name: github.create_pull_request_confirmed
+    action_type: write
+    safety_level: approval_required
+    enabled_by_default: false
+    description: Create a PR only after approval preview.
+safety:
+  default_profile: read_only
+  external_egress: gated
+  lockdown_mode_for_untrusted_repos: true
+  source_retention_days_default: 90
+sync:
+  modes: [incremental, backfill, webhook]
+normalization:
+  item_types: [issue, pull_request, repo_file, workflow_run, user]

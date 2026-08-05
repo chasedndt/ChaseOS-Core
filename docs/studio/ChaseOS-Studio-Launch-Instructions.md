@@ -14,14 +14,14 @@ Use this note when an operator wants to see the Studio interface locally.
 The canonical product lane is the native PyWebView shell:
 
 ```powershell
-cd C:\Users\chaseos\Documents\chaseos_obsidian
+cd C:\Users\<you>\Documents\<your-chaseos-instance>
 python -m chaseos studio shell
 ```
 
 Optional explicit vault root:
 
 ```powershell
-python -m chaseos studio shell --vault-root C:\Users\chaseos\Documents\chaseos_obsidian
+python -m chaseos studio shell --vault-root C:\Users\<you>\Documents\<your-chaseos-instance>
 ```
 
 Native shell does not use an operator-selected browser port. It opens a desktop window.
@@ -31,7 +31,7 @@ Native shell does not use an operator-selected browser port. It opens a desktop 
 Use the localhost harness when you want to open Studio in a normal browser on your own port:
 
 ```powershell
-cd C:\Users\chaseos\Documents\chaseos_obsidian
+cd C:\Users\<you>\Documents\<your-chaseos-instance>
 python -m chaseos studio desktop-shell-app --host 127.0.0.1 --port 8788
 ```
 
@@ -80,7 +80,7 @@ python -m chaseos studio desktop-shell-app --host 127.0.0.1 --port 8788 --serve-
 Use this bounded harness when you specifically want to manually click through the Studio Chat schedule controls in a normal browser. It is not the full native Studio shell; it is a loopback-only test surface backed by the same governed `StudioAPI` methods as the native Chat page.
 
 ```powershell
-cd C:\Users\chaseos\Documents\chaseos_obsidian
+cd C:\Users\<you>\Documents\<your-chaseos-instance>
 python -m runtime.studio.phase11_chat_schedule_manual_test_app --host 127.0.0.1 --port 8791 --serve-seconds 1800
 ```
 
